@@ -620,13 +620,13 @@ section,
     linear,
     left top,
     right top,
-    from(rgba(239, 63, 62, 0.25)),
-    to(rgba(239, 63, 62, 0.05))
+    from(rgba($c6, 0.25)),
+    to(rgba($c6, 0.05))
   );
   background: linear-gradient(
     to right,
-    rgba(239, 63, 62, 0.25) 0%,
-    rgba(239, 63, 62, 0.05) 100%
+    rgba($c6, 0.25) 0%,
+    rgba($c6, 0.05) 100%
   );
   width: 70px;
   height: 26px;
@@ -889,8 +889,8 @@ section,
   padding: 18px 20px;
   border-radius: 20px;
   background-color: $c3;
-  -webkit-box-shadow: 7.5px 12.99px 40px 0px rgba(239, 63, 62, 0.25);
-  box-shadow: 7.5px 12.99px 40px 0px rgba(239, 63, 62, 0.25);
+  -webkit-box-shadow: 7.5px 12.99px 40px 0px rgba($c6, 0.25);
+  box-shadow: 7.5px 12.99px 40px 0px rgba($c6, 0.25);
   margin-bottom: 30px;
 }
 .service_section .service-wrap h5 {
@@ -12914,7 +12914,7 @@ section,
   font-weight: bold;
   line-height: 1.5rem;
   padding: 4px 0;
-  background: rgba(239, 63, 62, 0.25);
+  background: rgba($c6, 0.25);
   border-radius: 5px;
   -webkit-animation-duration: 300ms;
   animation-duration: 300ms;
@@ -12949,8 +12949,8 @@ section,
   .seat
   label:hover {
   cursor: pointer;
-  -webkit-box-shadow: 0 0 0px 2px rgba(239, 63, 62, 0.7);
-  box-shadow: 0 0 0px 2px rgba(239, 63, 62, 0.7);
+  -webkit-box-shadow: 0 0 0px 2px rgba($c6, 0.7);
+  box-shadow: 0 0 0px 2px rgba($c6, 0.7);
 }
 
 @-webkit-keyframes rubberBand {
@@ -18062,13 +18062,13 @@ body.rtl {
     linear,
     right top,
     left top,
-    from(rgba(239, 63, 62, 0.25)),
-    to(rgba(239, 63, 62, 0.05))
+    from(rgba($c6, 0.25)),
+    to(rgba($c6, 0.05))
   );
   background: linear-gradient(
     to left,
-    rgba(239, 63, 62, 0.25) 0%,
-    rgba(239, 63, 62, 0.05) 100%
+    rgba($c6, 0.25) 0%,
+    rgba($c6, 0.05) 100%
   );
 }
 .rtl .app-section .app-content .app-buttons a + a {

@@ -1,5 +1,5 @@
 import AutoComplete from "@/components/common/AutoComplete";
-import AutoComplete2 from "@/components/common/AutoComplete2"
+import AutoComplete2 from "@/components/common/AutoComplete2";
 import {
   faCalendar,
   faCrosshairs,
@@ -10,11 +10,11 @@ import {
 import DatePicker from "react-datepicker";
 import { Button, Col, Input, Label, Row } from "reactstrap";
 
-import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PassengersQty from "./Passengers.Qty";
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import "react-datepicker/dist/react-datepicker.css";
 
 const SearchForm = (props) => {
   const [startDate, setStartDate] = useState(new Date());
@@ -130,7 +130,6 @@ const SearchForm = (props) => {
               className="position-relative z-2"
               icon={faCrosshairs}
             />
-            
           </Col>
           <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
             {props.showLabel && <Label>to</Label>}
