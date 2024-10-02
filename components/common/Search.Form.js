@@ -126,7 +126,7 @@ const SearchForm = (props) => {
             {props.showLabel && <Label>from</Label>}
             <AutoComplete2
               items={fromItems}
-              placeholder="Form"
+              placeholder="From"
               className="position-relative z-2"
               icon={faCrosshairs}
             />

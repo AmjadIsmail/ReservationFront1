@@ -1,4 +1,5 @@
 import Image from "next/image";
+import cloud from "@/public/images/cloud.png";
 import { Button, Col, Container, Input, Label } from "reactstrap";
 import SearchForm from "@/components/common/Search.Form";
 
@@ -7,7 +8,13 @@ const HeaderHome = () => {
     <>
       <div className="headerHome cab-section flight-section p-0">
         <div className="cloud">
-          {/* <Image src="../assets/images/flights/cloud.png" alt="" className="bg-img d-none"> */}
+          <Image
+            src={cloud}
+            width="50"
+            height="50"
+            alt=""
+            className="bg-img d-none"
+          />
         </div>
         <Container>
           <Col lg={6}>

@@ -34,7 +34,7 @@ const FrontNavOnly = (props) => {
           toggle={toggle}
         >
           <DropdownToggle nav caret>
-            Your rights
+           Packages
           </DropdownToggle>
           <DropdownMenu left={true}>
             <Row>
@@ -67,16 +67,18 @@ const FrontNavOnly = (props) => {
             </Row>
           </DropdownMenu>
         </UncontrolledDropdown>
-
         <NavItem>
           <NavLink href="#">FAQ</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink href="#">About</NavLink>
+          <NavLink href="#">Visa</NavLink>
+          </NavItem>
+        <NavItem>
+          <NavLink href="#">Insurance</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink href="#" className="d-lg-none">
-            Contact
+          <NavLink href="#">
+          About
           </NavLink>
         </NavItem>
       </Nav>
