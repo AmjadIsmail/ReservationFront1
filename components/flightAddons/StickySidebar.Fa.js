@@ -1,29 +1,29 @@
-import { Input } from "reactstrap";
+import { Button, Input } from "reactstrap";
 
 const StickySidebarFa = () => {
   return (
-    <div class="sticky-cls-top">
-      <div class="review-section">
-        <div class="review_box">
-          <div class="title-top">
+    <div className="sticky-cls-top">
+      <div className="review-section">
+        <div className="review_box">
+          <div className="title-top">
             <h5>travel addons</h5>
           </div>
-          <div class="flight_detail">
-            <div class="summery_box">
-              <table class="table table-borderless">
+          <div className="flight_detail">
+            <div className="summery_box">
+              <table className="table table-borderless">
                 <tbody>
                   <tr>
                     <td>flight fare</td>
                     <td>$2500</td>
                   </tr>
-                  <tr class="title">
+                  <tr className="title">
                     <td>additional baggage</td>
                   </tr>
                   <tr>
                     <td>additional 15kg</td>
                     <td>+ $25</td>
                   </tr>
-                  <tr class="title">
+                  <tr className="title">
                     <td>inflight meals</td>
                   </tr>
                   <tr>
@@ -34,7 +34,7 @@ const StickySidebarFa = () => {
                     <td>non-veg meal X (1)</td>
                     <td>+ $18</td>
                   </tr>
-                  <tr class="title">
+                  <tr className="title">
                     <td>seats</td>
                   </tr>
                   <tr>
@@ -43,7 +43,7 @@ const StickySidebarFa = () => {
                   </tr>
                 </tbody>
               </table>
-              <div class="grand_total">
+              <div className="grand_total">
                 <h5>
                   grand total: <span>$2750</span>
                 </h5>
@@ -52,11 +52,11 @@ const StickySidebarFa = () => {
           </div>
         </div>
       </div>
-      <div class="single-section">
-        <div class="single-sidebar p-0">
-          <div class="newsletter-sec">
+      <div className="single-section">
+        <div className="single-sidebar p-0">
+          <div className="newsletter-sec">
             <div>
-              <h4 class="title">always first</h4>
+              <h4 className="title">always first</h4>
               <p>
                 Be the first to find out latest tours and exclusive offers and
                 get 15% off your first booking.
@@ -65,13 +65,13 @@ const StickySidebarFa = () => {
                 <Input
                   type="email"
                   id="email1"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Enter your email"
                 />
-                <div class="button">
-                  <a href="#" class="btn btn-solid ">
+                <div className="button">
+                  <Button color="c6" className="rounded-0">
                     be the first
-                  </a>
+                  </Button>
                 </div>
               </form>
             </div>
