@@ -11966,10 +11966,23 @@ section,
 }
 .flight-detail-sec .detail-bar .detail-wrap {
   background-color: white;
-  padding: 15px 0;
+  // padding: 15px 0;
   border: 1px dashed transparent;
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
+
+  .results {
+    padding: 0 0 15px 0;
+
+    .outbound,
+    .inbound {
+      h5 {
+        // color: $c3;
+        background-color: rgba($black, 0.05);
+        padding: 8px 0;
+      }
+    }
+  }
 }
 .flight-detail-sec .detail-bar .detail-wrap .logo-sec {
   text-align: center;

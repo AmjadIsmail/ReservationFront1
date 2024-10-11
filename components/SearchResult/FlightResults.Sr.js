@@ -127,67 +127,86 @@ const FlightResultsSr = () => {
             <div className="detail-wrap wow fadeInUp">
               <Row className="align-items-center">
                 <Col md={9}>
-                  <div className="outbound border-bottom mb10 pb10">
-                    <div className="title-3">
-                      <h3>Outbound</h3>
+                  <div className="results border-end">
+                    <div className="outbound border-bottom pb15">
+                      <div className="title-3">
+                        <h5>
+                          <i className="fas fa-plane-departure fs16"></i>{" "}
+                          Outbound
+                        </h5>
+                      </div>
+                      <div className="peLg30">
+                        <Row>
+                          <Col md={4}>
+                            <div className="logo-sec">
+                              <Image
+                                src={item.img}
+                                className="img-fluid"
+                                alt=""
+                              />
+                              <span className="title">{item.title}</span>
+                            </div>
+                          </Col>
+                          <Col md={8}>
+                            <div className="airport-part">
+                              <div className="airport-name">
+                                <h4>{item.depTime}</h4>
+                                <h6>{item.depAriport}</h6>
+                              </div>
+                              <div className="airport-progress">
+                                <i className="fas fa-plane-departure float-start"></i>
+                                <i className="fas fa-plane-arrival float-end"></i>
+                                <div className="stop">{item.stop}</div>
+                              </div>
+                              <div className="airport-name arrival">
+                                <h4>{item.arrTime}</h4>
+                                <h6>{item.arrAriport}</h6>
+                              </div>
+                            </div>
+                          </Col>
+                          <Col md={3}></Col>
+                        </Row>
+                      </div>
                     </div>
-                    <Row>
-                      <Col md={4}>
-                        <div className="logo-sec">
-                          <Image src={item.img} className="img-fluid" alt="" />
-                          <span className="title">{item.title}</span>
-                        </div>
-                      </Col>
-                      <Col md={8}>
-                        <div className="airport-part">
-                          <div className="airport-name">
-                            <h4>{item.depTime}</h4>
-                            <h6>{item.depAriport}</h6>
-                          </div>
-                          <div className="airport-progress">
-                            <i className="fas fa-plane-departure float-start"></i>
-                            <i className="fas fa-plane-arrival float-end"></i>
-                            <div className="stop">{item.stop}</div>
-                          </div>
-                          <div className="airport-name arrival">
-                            <h4>{item.arrTime}</h4>
-                            <h6>{item.arrAriport}</h6>
-                          </div>
-                        </div>
-                      </Col>
-                      <Col md={3}></Col>
-                    </Row>
-                  </div>
-                  <div className="inbound">
-                    <div className="title-3">
-                      <h3>Inbound</h3>
+                    <div className="inbound">
+                      <div className="title-3">
+                        <h5>
+                          Inbound <i className="fas fa-plane-arrival fs16"></i>
+                        </h5>
+                      </div>
+                      <div className="peLg30">
+                        <Row>
+                          <Col md={4}>
+                            <div className="logo-sec">
+                              <Image
+                                src={item.img}
+                                className="img-fluid"
+                                alt=""
+                              />
+                              <span className="title">{item.title}</span>
+                            </div>
+                          </Col>
+                          <Col md={8}>
+                            <div className="airport-part">
+                              <div className="airport-name">
+                                <h4>{item.depTime}</h4>
+                                <h6>{item.depAriport}</h6>
+                              </div>
+                              <div className="airport-progress">
+                                <i className="fas fa-plane-departure float-start"></i>
+                                <i className="fas fa-plane-arrival float-end"></i>
+                                <div className="stop">{item.stop}</div>
+                              </div>
+                              <div className="airport-name arrival">
+                                <h4>{item.arrTime}</h4>
+                                <h6>{item.arrAriport}</h6>
+                              </div>
+                            </div>
+                          </Col>
+                          <Col md={3}></Col>
+                        </Row>
+                      </div>
                     </div>
-                    <Row>
-                      <Col md={4}>
-                        <div className="logo-sec">
-                          <Image src={item.img} className="img-fluid" alt="" />
-                          <span className="title">{item.title}</span>
-                        </div>
-                      </Col>
-                      <Col md={8}>
-                        <div className="airport-part">
-                          <div className="airport-name">
-                            <h4>{item.depTime}</h4>
-                            <h6>{item.depAriport}</h6>
-                          </div>
-                          <div className="airport-progress">
-                            <i className="fas fa-plane-departure float-start"></i>
-                            <i className="fas fa-plane-arrival float-end"></i>
-                            <div className="stop">{item.stop}</div>
-                          </div>
-                          <div className="airport-name arrival">
-                            <h4>{item.arrTime}</h4>
-                            <h6>{item.arrAriport}</h6>
-                          </div>
-                        </div>
-                      </Col>
-                      <Col md={3}></Col>
-                    </Row>
                   </div>
                 </Col>
                 <Col md={3}>
