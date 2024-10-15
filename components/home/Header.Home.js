@@ -8,8 +8,11 @@ import { Col, Container } from "reactstrap";
 const HeaderHome = () => {
   const settings = {
     dots: true,
-    infinite: false,
+    infinite: true,
+    autoplay: true,
     speed: 500,
+    autoplaySpeed: 5000,
+    cssEase: "linear",
     slidesToShow: 1,
     slidesToScroll: 1,
     fade: true,
