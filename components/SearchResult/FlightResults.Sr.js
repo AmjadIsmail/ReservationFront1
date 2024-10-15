@@ -124,7 +124,17 @@ const FlightResultsSr = () => {
       <div className="detail-bar">
         {results.map((item, index) => {
           return (
-            <div className="detail-wrap wow fadeInUp">
+            <div className="detail-wrap border rounded-3 wow fadeInUp">
+              <div className="border-bottom  p-3">
+                <Row className="align-items-center">
+                  <Col md={9}>
+                    <h5 className="mb-0">
+                      London <i className="fas fa-arrow-right fa-1x textC3"></i>{" "}
+                      Dubai
+                    </h5>
+                  </Col>
+                </Row>
+              </div>
               <Row className="align-items-center">
                 <Col md={9}>
                   <div className="results border-end">
@@ -135,7 +145,7 @@ const FlightResultsSr = () => {
                           Outbound
                         </h5>
                       </div>
-                      <div className="peLg30">
+                      <div className="peLg30 mb-lg-0 mb15">
                         <Row>
                           <Col md={4}>
                             <div className="logo-sec">
