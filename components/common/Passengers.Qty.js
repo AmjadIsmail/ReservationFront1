@@ -4,6 +4,7 @@ import { Button, FormGroup, Input, Label } from "reactstrap";
 const PassengersQty = ({ onFocus }) => {
   const [valueAdult, setValueAdult] = useState(1);
   const [valueChildren, setValueChildren] = useState(1);
+  const [valueInfant, setValueInfant] = useState(1);
 
   const handleIncrementAdult = () => {
     setValueAdult((prevValue) => prevValue + 1);
@@ -32,6 +33,21 @@ const PassengersQty = ({ onFocus }) => {
     const newValue = Number(e.target.value);
     if (!isNaN(newValue) && newValue > 0) {
       setValueChildren(newValue);
+    }
+  };
+
+  const handleIncrementInfant = () => {
+    setValueChildren((prevValue) => prevValue + 1);
+  };
+
+  const handleDecrementInfant = () => {
+    setValueChildren((prevValue) => (prevValue > 1 ? prevValue - 1 : 1));
+  };
+
+  const handleChangeInfant = (e) => {
+    const newValue = Number(e.target.value);
+    if (!isNaN(newValue) && newValue > 0) {
+      setValueInfant(newValue);
     }
   };
 
@@ -87,6 +103,33 @@ const PassengersQty = ({ onFocus }) => {
               color="transparent"
               className="text-c5"
               onClick={handleIncrementChildren}
+            >
+              +
+            </Button>
+          </div>
+        </div>
+        <div className="rowSt mt10">
+          <Label>Infant</Label>
+
+          <div className="inputGp">
+            <Button
+              color="transparent"
+              className="text-c5"
+              onClick={handleDecrementInfant}
+            >
+              -
+            </Button>
+            <Input
+              type="text"
+              value={valueInfant}
+              onChange={handleChangeInfant}
+              min="1"
+              className="w30px p-0 text-center border-0 rounded-0"
+            />
+            <Button
+              color="transparent"
+              className="text-c5"
+              onClick={handleIncrementInfant}
             >
               +
             </Button>
