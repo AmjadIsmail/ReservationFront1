@@ -1,4 +1,6 @@
-import AutoComplete from "@/components/common/AutoComplete";
+
+
+import AutoComplete2 from "@/components/common/AutoComplete2";
 import { useState } from "react";
 import {
   faCalendar,
@@ -9,11 +11,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import { Button, Col, Input, Label, Row } from "reactstrap";
-
-import "react-datepicker/dist/react-datepicker.css";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PassengersQty from "./Passengers.Qty";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import "react-datepicker/dist/react-datepicker.css";
 var data = require("./AirportNames.json");
 const SearchForm = (props) => {
   const [startDate, setStartDate] = useState(new Date());

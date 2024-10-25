@@ -22,7 +22,7 @@ const SpecialOfferHome = () => {
             <Row>
               <Col lg={6}>
                 <div className="placeImg">
-                  <Image src={placeImg} alt="..." />
+                  <Image src={placeImg} className="wow zoomIn" alt="..." />
 
                   <div className="animation-place">
                     <div className=" plane-l">

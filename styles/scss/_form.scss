@@ -1,5 +1,6 @@
 .form {
-  &-control {
+  &-control,
+  &-select {
     &:focus {
       box-shadow: none;
     }

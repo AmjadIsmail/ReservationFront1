@@ -203,27 +203,6 @@ a {
   // }
 }
 
-.box {
-  border-radius: 12px;
-  border: 1px solid $c1;
-  padding: 40px 24px;
-  background-color: $white;
-
-  @media screen and (max-width: 991px) {
-    padding: 24px 16px;
-  }
-}
-
-.mainBox {
-  padding: 80px 108px;
-  border-radius: 20px;
-  background-color: $white;
-
-  @media screen and (max-width: 991px) {
-    padding: 40px 16px;
-  }
-}
-
 // img {
 //   width: 100%;
 //   height: auto;
@@ -546,4 +525,12 @@ a {
 
 .container-medium {
   padding: 0 30px;
+}
+.template-width {
+  width: 724px;
+}
+.booking-table {
+  width: 100%;
+  border: 1px solid #dddddd;
+  margin-top: 40px;
 }
