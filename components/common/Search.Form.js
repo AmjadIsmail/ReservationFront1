@@ -1,4 +1,5 @@
 import AutoComplete from "@/components/common/AutoComplete";
+import { useState } from "react";
 import {
   faCalendar,
   faCrosshairs,
@@ -10,14 +11,14 @@ import DatePicker from "react-datepicker";
 import { Button, Col, Input, Label, Row } from "reactstrap";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PassengersQty from "./Passengers.Qty";
-
+var data = require("./AirportNames.json");
 const SearchForm = (props) => {
   const [startDate, setStartDate] = useState(new Date());
   const [showPassengers, setShowPassengers] = useState(false);
-
+  const [value, setValue] = useState("");
   // Step 2: Show the div when the input is focused
   const handleFocus = () => {
     setShowPassengers(true);
@@ -26,6 +27,16 @@ const SearchForm = (props) => {
   // Step 3: Hide the div when the input loses focus
   const handleBlur = () => {
     setShowPassengers(false);
+  };
+
+  const onChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const onSearch = (searchTerm) => {
+    setValue(searchTerm);
+    // our api to fetch the search result
+    console.log("search ", searchTerm);
   };
 
   const fromItems = [
@@ -122,6 +133,30 @@ const SearchForm = (props) => {
         <Row className="g-lg-3 g-0 m-0 align-items-end">
           <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
             {props.showLabel && <Label>from</Label>}
+            {/* <input type="text" value={value} onChange={onChange} /> */}
+            <div className="dropdown">
+          {data
+            .filter((item) => {
+              const searchTerm = value.toLowerCase();
+              const fullName = item.full_name;
+
+              return (
+                searchTerm &&
+                fullName.startsWith(searchTerm) &&
+                fullName !== searchTerm
+              );
+            })
+            .slice(0, 10)
+            .map((item) => (
+              <div
+                onClick={() => onSearch(item.full_name)}
+                className="dropdown-row"
+                key={item.full_name}
+              >
+                {item.full_name}
+              </div>
+            ))}
+        </div>
             <AutoComplete
               items={fromItems}
               placeholder="Form"
