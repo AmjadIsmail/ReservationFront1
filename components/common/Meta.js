@@ -20,9 +20,9 @@ const Meta = (props) => {
 };
 
 Meta.defaultProps = {
-  siteTitle: "Reservation system",
+  siteTitle: "Jays Travels",
   title: "Home",
-  keywords: "Reservation system",
+  keywords: "Flights",
   description: "Reservation system",
 };
 
