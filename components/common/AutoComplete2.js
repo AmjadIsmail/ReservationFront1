@@ -12,7 +12,7 @@ const AirportSearch = ({ placeholder, className, icon }) => {
         const processedData = airportsData.map((airport, index) => ({
         
           id: index,
-          name: airport.AirportName.split(',')[0] + '-' + airport.AirportName.split(',')[2] + ','+ airport.AirportName.split(',')[1]+','+airport.AirportName.split(',')[3]
+          name: airport.AirportName.split(',')[0] + ',' + airport.AirportName.split(',')[2] + ','+ airport.AirportName.split(',')[1]+','+airport.AirportName.split(',')[3]
         }))
         setItems(processedData)
       }, [])
@@ -24,33 +24,31 @@ const AirportSearch = ({ placeholder, className, icon }) => {
         console.log(result);
       };
       const handleOnSearch = (string, results) => {
-        // onSearch will have as the first callback parameter
-        // the string searched and for the second the results.
-        console.log(string, results);
+            console.log(string, results);
       };
+     
       const handleOnSelect = (item) => {
-        // the item selected
-        
-        const [city, code,airport,country, ] = item.name.split(',')
+       
+       item.name = item.name.split(',')[0] + ' ,' + item.name.split(',')[3] + ' ['+ item.name.split(',')[1]+'], '+item.name.split(',')[2];
+       
         const formattedName = (
             <>
                 <span>
-        {`${city} - (${code}), ${country}, `}<b>{airport}</b>
+                {`${item.name}`}
             </span>
             </>
           )
-          
-          // Set the formatted selected airport for display
+               
           setSelectedAirport(formattedName)
       }
     
       const formatResult = (item) => {
        
-        const [city, country, code, airport] = item.name.split(',')
+        const [city, code,country,airport] = item.name.split(',')
         const formattedName = `${city} (${code}), ${country}, ${airport}`
         return (
           <span>
-        {`${city} - (${country}), ${code}, `}<b>{airport}</b>
+        {`${city} , ${airport} [${code}], ${country}  `}
             </span> 
         )
       }
@@ -68,6 +66,7 @@ const AirportSearch = ({ placeholder, className, icon }) => {
           formatResult={formatResult}
           placeholder={placeholder}
           showIcon={false}
+          maxResults={7}
         />
 
         <div className="icon">
