@@ -41,31 +41,17 @@ const FrontNavbar = (props) => {
           </Collapse>
 
           <div className="actions-nav">
-            {/* <Button
-              size="md"
-              color="transparent d-lg-inline d-none"
-              className="mx-lg-3"
-              // onClick={() => router.push("/contact")}
-            >
-              Contact
-            </Button> */}
+           
             <Input type="select">
-              <option value="volvo">GBP</option>
-              {/* <option value="saab">EUR</option>
-              <option value="opel">INR</option>
-              <option value="audi">AUD</option> */}
+              <option value="volvo">GBP</option>              
             </Input>
             <Input type="select" className="ms15">
-              <option value="volvo">ENG</option>
-              {/* <option value="saab">FRE</option>
-              <option value="opel">SPA</option>
-              <option value="audi">DUT</option> */}
+              <option value="volvo">ENG</option>             
             </Input>
             <Button
               size="md"
               color="transparent"
-              className="ms15"
-              // onClick={() => router.push("/contact")}
+              className="ms15"             
             >
               <FontAwesomeIcon icon={faUser} />
             </Button>

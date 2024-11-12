@@ -158,7 +158,7 @@ const SearchForm = (props) => {
               </div>
             ))}
         </div>
-            <AutoComplete
+            <AutoComplete2
               items={fromItems}
               placeholder="Form"
               className="position-relative z-2"
@@ -167,7 +167,7 @@ const SearchForm = (props) => {
           </Col>
           <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
             {props.showLabel && <Label>to</Label>}
-            <AutoComplete
+            <AutoComplete2
               items={toItems}
               placeholder="To"
               className="position-relative z-1"
