@@ -1,4 +1,5 @@
-import AutoComplete from "@/components/common/AutoComplete";
+"use client"
+//import AutoComplete from "@/components/common/AutoComplete";
 import AutoComplete2 from "@/components/common/AutoComplete2"
 import {
   faCalendar,
@@ -14,22 +15,90 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PassengersQty from "./Passengers.Qty";
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import { searchFlight } from "@/store/slice";
+import { useDispatch } from "react-redux";
 
-const SearchForm = (props) => {
+  const SearchForm = (props) => {
   const [startDate, setStartDate] = useState(new Date());
-  const [showPassengers, setShowPassengers] = useState(false);
+  const [endDate, setEndDate] = useState(new Date());
+  const [showPassengers, setShowPassengers] = useState(false);  
+  const [destAirport, setDestAirport] = useState(null);
+  const [originAirport, setOriginAirport] = useState(null);
+  const [fromDate , setFromDate] = useState(null);
+  const [toDate , setToDate] = useState(null);
+  const [adults , setAdults] = useState('');
+  const [childs , setChilds] = useState('');
+  const [infants , setInfants] = useState('');
+  const [cabin,setCabin] = useState('');
+  const [guestCounts, setGuestCounts] = useState({ adult: 0, child: 0, infant: 0 });
+  const [show, setShow] = useState(true);
+  const dispatch = useDispatch();
+ 
+  const updateshowpassengerfromChild = (newValue) => {
+    setShowPassengers(newValue);
+  };
+  
+  const handlecabin = (value) =>{
+    setCabin(value);
+  }
+  const handleGuestsChange = (counts) => {
+    setGuestCounts(counts);
+  };
 
-  // Step 2: Show the div when the input is focused
-  const handleFocus = () => {
+  const handleFromDate = (fromDate) => {
+    setFromDate(fromDate);
+  };
+
+  const handleToDate = (toDate) => {
+    setToDate(toDate);
+  };
+
+  const handleAdults = (adults) => {
+    setAdults(adults);
+  };
+
+  
+  const handleChild = (childs) => {
+    setChilds(childs);
+  };
+
+  const handleInfant = (infants) => {
+    setInfants(infants);
+  };
+  const handlePassengerQtyChange = (qty) => {
+    
+    setAdults(qty.valueAdult);
+    setChilds(qty.valueChildren);
+    setInfants(qty.valueInfants);
+  };
+  const handleDestAirportChange = (airport) => {
+    setDestAirport(airport);
+  };
+
+  
+  const handleOriginAirportChange = (airport) => {
+    setOriginAirport(airport);
+  };
+  
+  const handleFocus = (reason) => {       
+   
+     setShowPassengers(true);
+   
+  };
+  const handleClick = () => { 
+    
     setShowPassengers(true);
+   
   };
-
-  // Step 3: Hide the div when the input loses focus
-  const handleBlur = () => {
-    setShowPassengers(false);
+ 
+  const handleBlur = (reason) => {  
+    
+    setShowPassengers((prevShow) => !prevShow); 
   };
-
+ const AutocompleteDispatch=()=>{
+    debugger;
+  dispatch(searchFlight({ destination: destAirport, origin: originAirport , fromdate : startDate , todate : endDate , adults : adults , childs : childs , infants : infants , cabin : cabin }));
+ }
   const fromItems = [
     {
       id: 0,
@@ -128,17 +197,18 @@ const SearchForm = (props) => {
               items={fromItems}
               placeholder="Form"
               className="position-relative z-2"
-              icon={faCrosshairs}
-            />
-            
-          </Col>
+              icon={faCrosshairs}     
+              onAirportSelect={handleDestAirportChange}       
+            /> 
+             </Col>
           <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
             {props.showLabel && <Label>to</Label>}
             <AutoComplete2
               items={toItems}
               placeholder="To"
               className="position-relative z-1"
-              icon={faLocationDot}
+              icon={faLocationDot}  
+              onAirportSelect={handleOriginAirportChange}
             />
           </Col>
           <Col lg={props.col2 || "4"} md={props.col2 || "4"}>
@@ -160,10 +230,9 @@ const SearchForm = (props) => {
             <div className="inputGroup">
               <DatePicker
                 className=" px12 form-control rounded-0"
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
               />
-
               <div className="icon">
                 <FontAwesomeIcon icon={faCalendar} />
               </div>
@@ -176,16 +245,16 @@ const SearchForm = (props) => {
                 <Input
                   type="text"
                   placeholder="Passengers"
-                  className="rounded-0 "
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
+                  className="rounded-0 " 
+                  onFocus={() => handleFocus()}     
+                  onClick={() => handleClick()}           
                 />
-
-                <div className="icon">
+                <div className="icon" >
                   <FontAwesomeIcon icon={faUser} />
                 </div>
-              </div>
-              {showPassengers && <PassengersQty />}
+              </div>              
+              {showPassengers && <PassengersQty  onGuestsChange={handlePassengerQtyChange}  updateshow={updateshowpassengerfromChild} parentcabin={handlecabin} />}           
+             
             </div>
           </Col>
           {props.flightConnectingHide || (
@@ -210,6 +279,7 @@ const SearchForm = (props) => {
               color="c3"
               size="md"
               className="text-uppercase mtLg10 mt6"
+              onClick={AutocompleteDispatch}
             >
               Book now
             </Button>

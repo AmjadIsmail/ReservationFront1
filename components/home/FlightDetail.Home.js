@@ -9,31 +9,37 @@ import Slider from "react-slick";
 
 const items = [
   {
+    id : 1,
     country: "australia",
     price: 451,
     countity: 35,
   },
   {
+    id  :2,
     country: "bahrain",
     price: 610,
     countity: 18,
   },
   {
+    id  :3,
     country: "china",
     price: 621,
     countity: 21,
   },
   {
+    id  :4,
     country: "egypt",
     price: 480,
     countity: 6,
   },
   {
+    id  :5,
     country: "india",
     price: 320,
     countity: 31,
   },
   {
+    id  :6,
     country: "australia",
     price: 451,
     countity: 35,
@@ -98,7 +104,7 @@ const FlightDetailHome = () => {
                       <Slider {...settings}>
                         {items.map((item, index) => {
                           return (
-                            <div key={index}>
+                            <div key={item.id}>
                               <Link href="#">
                                 <div className="flight-info">
                                   <div>
@@ -135,7 +141,7 @@ const FlightDetailHome = () => {
                       <Slider {...settings}>
                         {items.map((item, index) => {
                           return (
-                            <div>
+                            <div key={item.id}>
                               <Link href="#">
                                 <div className="flight-info">
                                   <div>

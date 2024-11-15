@@ -4,9 +4,15 @@ import { faCrosshairs } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import airportsData from '../../src/util/AirportNames.json';
 
-const AirportSearch = ({ placeholder, className, icon }) => {
+const AirportSearch = ({ placeholder, className, icon ,onAirportSelect }) => {
     const [items, setItems] = useState([])
-    const [selectedAirport, setSelectedAirport] = useState('')
+    const [destAirport, setDestAirport] = useState('')
+    const [originAirport, setOriginAirport] = useState('')
+    const handleAirportChange = (airport) => {
+      setDestAirport(airport);
+      onAirportSelect(airport); 
+    };
+  
     useEffect(() => {
        
         const processedData = airportsData.map((airport, index) => ({
@@ -39,7 +45,9 @@ const AirportSearch = ({ placeholder, className, icon }) => {
             </>
           )
                
-          setSelectedAirport(formattedName)
+         // setSelectedAirport(formattedName)
+         handleAirportChange(`${item.name}`)
+         
       }
     
       const formatResult = (item) => {

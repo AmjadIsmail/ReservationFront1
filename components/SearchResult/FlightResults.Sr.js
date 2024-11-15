@@ -124,7 +124,7 @@ const FlightResultsSr = () => {
       <div className="detail-bar">
         {results.map((item, index) => {
           return (
-            <div className="detail-wrap wow fadeInUp">
+            <div className="detail-wrap wow fadeInUp" key={item.id}>
               <Row className="align-items-center">
                 <Col md={9}>
                   <div className="outbound border-bottom mb10 pb10">
