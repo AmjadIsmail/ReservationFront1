@@ -2,11 +2,11 @@ import  React, {useState } from "react";
 import { Button, FormGroup, Input, Label } from "reactstrap";
 
 const 
-PassengersQty = ({onFocus ,onGuestsChange,updateshow , parentcabin  }) => {  
-  const [valueAdult, setValueAdult] = useState(1);
-  const [valueChildren, setValueChildren] = useState(0);
-  const [valueInfants , setValueInfants] = useState(0);
-  const [cabin , setCabin] = useState('');   
+PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassValue ,onFocus ,onGuestsChange,updateshow , parentcabin  }) => {  
+  const [valueAdult, setValueAdult] = useState(adultsValue);
+  const [valueChildren, setValueChildren] = useState(childsValue);
+  const [valueInfants , setValueInfants] = useState(infantsValue);
+  const [cabin , setCabin] = useState(selectedClassValue);   
   const updateParent = () => {
     onGuestsChange({ valueAdult, valueChildren, valueInfants });
   };
@@ -46,7 +46,7 @@ PassengersQty = ({onFocus ,onGuestsChange,updateshow , parentcabin  }) => {
   };
 
   const handleDecrementChildren = () => {
-    setValueChildren((prevValue) => (prevValue > 1 ? prevValue - 1 : 1));
+    setValueChildren((prevValue) => (prevValue > 1 ? prevValue - 1 : 0));
     
   };
 
@@ -62,7 +62,7 @@ PassengersQty = ({onFocus ,onGuestsChange,updateshow , parentcabin  }) => {
   };
 
   const handleDecrementInfants = () => {
-    setValueInfants((prevValue) => (prevValue > 1 ? prevValue - 1 : 1));   
+    setValueInfants((prevValue) => (prevValue > 1 ? prevValue - 1 : 0));   
   };
 
   const handleChangeInfants = (e) => {
@@ -164,14 +164,20 @@ PassengersQty = ({onFocus ,onGuestsChange,updateshow , parentcabin  }) => {
         </div>
 
         <div className="flightClass">
+        <Label check className="mt7 mb4">
+            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('economy')}  checked={selectedClassValue === 'economy'} /> economy
+          </Label>  
           <Label check className="mt7 mb4">
-            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('economy')} /> economy
+            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('premiumeconomy')}  checked={selectedClassValue === 'premiumeconomy'}/> premium economy
           </Label>
           <Label check className="mt7 mb4">
-            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('premium')} /> premium
-          </Label>
+            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('basiceconomy')} checked={selectedClassValue === 'basiceconomy'}/> basic economy
+          </Label>                
           <Label check className="mt7 mb4">
-            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('business')}/> business
+            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('business')} checked={selectedClassValue === 'business'}/> business
+          </Label>          
+          <Label check className="mt7 mb4">
+            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('first')} checked={selectedClassValue === 'first'}/> first
           </Label>
         </div>
 

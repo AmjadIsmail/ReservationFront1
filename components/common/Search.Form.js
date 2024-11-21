@@ -8,16 +8,18 @@ import {
   faTimesCircle,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { submitFlightData,setFlights } from "@/store/AvailabilitySlice";
 import DatePicker from "react-datepicker";
 import { Button, Col, Input, Label, Row } from "reactstrap";
-
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
+import { useSelector } from 'react-redux';
+import { useState  } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PassengersQty from "./Passengers.Qty";
-import { searchFlight } from "@/store/slice";
 import { useDispatch } from "react-redux";
-
+import { AirLineClass } from "../classes/airlineclass";
+import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
   const SearchForm = (props) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -26,20 +28,28 @@ import { useDispatch } from "react-redux";
   const [originAirport, setOriginAirport] = useState(null);
   const [fromDate , setFromDate] = useState(null);
   const [toDate , setToDate] = useState(null);
-  const [adults , setAdults] = useState('');
-  const [childs , setChilds] = useState('');
-  const [infants , setInfants] = useState('');
-  const [cabin,setCabin] = useState('');
-  const [guestCounts, setGuestCounts] = useState({ adult: 0, child: 0, infant: 0 });
-  const [show, setShow] = useState(true);
+  const [adults , setAdults] = useState(1);
+  const [childs , setChilds] = useState(0);
+  const [infants , setInfants] = useState(0);
+  const [cabin,setCabin] = useState('economy');
+  const [flightType , setFlightType] = useState('N');
+  const [selectedFlightClass, setSelectedFlightClass] = useState('economy');
+  const [apiResponse,setApiResponse] = useState('ready for hit');
   const dispatch = useDispatch();
- 
+ const router = useRouter();
+  const flights = useSelector((state) => state.flights.flights);
+  console.log(flights);
+  
   const updateshowpassengerfromChild = (newValue) => {
-    setShowPassengers(newValue);
+    setShowPassengers(newValue); 
   };
   
   const handlecabin = (value) =>{
     setCabin(value);
+    setSelectedFlightClass(value); 
+  }
+  const handleFlightType = (value) =>{
+    setFlightType(value);
   }
   const handleGuestsChange = (counts) => {
     setGuestCounts(counts);
@@ -55,50 +65,83 @@ import { useDispatch } from "react-redux";
 
   const handleAdults = (adults) => {
     setAdults(adults);
-  };
-
-  
+  };  
   const handleChild = (childs) => {
     setChilds(childs);
   };
-
   const handleInfant = (infants) => {
     setInfants(infants);
   };
   const handlePassengerQtyChange = (qty) => {
-    
     setAdults(qty.valueAdult);
     setChilds(qty.valueChildren);
     setInfants(qty.valueInfants);
   };
   const handleDestAirportChange = (airport) => {
     setDestAirport(airport);
-  };
-
-  
+  };  
   const handleOriginAirportChange = (airport) => {
     setOriginAirport(airport);
+  };  
+  const handleFocus = () => {  
+     setShowPassengers(true);   
   };
-  
-  const handleFocus = (reason) => {       
-   
-     setShowPassengers(true);
-   
-  };
-  const handleClick = () => { 
-    
-    setShowPassengers(true);
-   
+  const handleClick = () => {     
+    setShowPassengers(true);   
   };
  
-  const handleBlur = (reason) => {  
-    
+  const handleBlur = (reason) => {     
     setShowPassengers((prevShow) => !prevShow); 
   };
- const AutocompleteDispatch=()=>{
-    debugger;
-  dispatch(searchFlight({ destination: destAirport, origin: originAirport , fromdate : startDate , todate : endDate , adults : adults , childs : childs , infants : infants , cabin : cabin }));
+  function extractAirportCode(destination) {
+    const match = destination.match(/\[([A-Z]{3})\]/); 
+    return match ? match[1] : null; 
+  }
+  const getFormattedDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');  
+    return `${year}-${month}-${day}`;
+  };
+
+ 
+ const DispatchData=()=>{
+ 
+let cabinclass 
+
+if (cabin.toLowerCase() === "premiumeconomy") {
+  cabinclass = AirLineClass.PremiumEconomy;
+}
+else if (cabin.toLowerCase() === "basiceconomy") {
+  cabinclass = AirLineClass.BasicEconomy;
+}
+else if (cabin.toLowerCase() === "economy") {
+  cabinclass = AirLineClass.Economy;
+}
+else if (cabin.toLowerCase() === "business") {
+  cabinclass = AirLineClass.Business;
+}
+else if (cabin.toLowerCase() === "first") {
+  cabinclass = AirLineClass.First;
+}
+let deptAirport = extractAirportCode(originAirport);
+let arrivalAirport  = extractAirportCode(destAirport);
+let datefrom = getFormattedDate(startDate);
+let dateTo = getFormattedDate(endDate);
+
+var flightData = { origin: deptAirport ,destination: arrivalAirport,  departureDate : datefrom , returnDate : dateTo , adults : adults , children : childs , infant : infants , cabinClass : cabinclass , flightType : flightType }
+try {
+  debugger; 
+  dispatch(submitFlightData(flightData)).unwrap().then(()=>{
+   router.push("/search-result");
+ 
+  })
+  
+ } catch (error) {
+   console.error('Error api call data:', error.message);
+   alert(error);
  }
+}
   const fromItems = [
     {
       id: 0,
@@ -198,7 +241,7 @@ import { useDispatch } from "react-redux";
               placeholder="Form"
               className="position-relative z-2"
               icon={faCrosshairs}     
-              onAirportSelect={handleDestAirportChange}       
+              onAirportSelect={handleOriginAirportChange}       
             /> 
              </Col>
           <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
@@ -208,7 +251,7 @@ import { useDispatch } from "react-redux";
               placeholder="To"
               className="position-relative z-1"
               icon={faLocationDot}  
-              onAirportSelect={handleOriginAirportChange}
+              onAirportSelect={handleDestAirportChange}
             />
           </Col>
           <Col lg={props.col2 || "4"} md={props.col2 || "4"}>
@@ -253,7 +296,7 @@ import { useDispatch } from "react-redux";
                   <FontAwesomeIcon icon={faUser} />
                 </div>
               </div>              
-              {showPassengers && <PassengersQty  onGuestsChange={handlePassengerQtyChange}  updateshow={updateshowpassengerfromChild} parentcabin={handlecabin} />}           
+              {showPassengers && <PassengersQty adultsValue={adults} childsValue={childs} infantsValue={infants} selectedClassValue={selectedFlightClass} onGuestsChange={handlePassengerQtyChange}  updateshow={updateshowpassengerfromChild} parentcabin={handlecabin} />}           
              
             </div>
           </Col>
@@ -261,12 +304,12 @@ import { useDispatch } from "react-redux";
             <>
               <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
                 <div className="flightConnecting mtLg10">
-                  <Label check>
-                    <Input name="radio1" type="radio" />{" "}
+                  <Label check onClick={() => handleFlightType('')}>
+                    <Input name="radio1" type="radio" checked={flightType === ''}/>{" "}
                     <span className="ms6">multi-city route</span>
                   </Label>
-                  <Label check>
-                    <Input name="radio1" type="radio" />{" "}
+                  <Label check onClick={() => handleFlightType('N')}>
+                    <Input name="radio1" type="radio" checked={flightType === 'N'}/>{" "}
                     <span className="ms6">non stop flights</span>
                   </Label>
                 </div>
@@ -279,18 +322,21 @@ import { useDispatch } from "react-redux";
               color="c3"
               size="md"
               className="text-uppercase mtLg10 mt6"
-              onClick={AutocompleteDispatch}
-            >
+              onClick={DispatchData}>
               Book now
             </Button>
+            <Label>
+              <span className="ms6">{apiResponse}</span>                   
+          </Label>
           </Col>
         </Row>
-
         <div className="responsive-close">
           <Button color="transparent" className="p-0" onClick={props.closeBtn}>
-            <FontAwesomeIcon icon={faTimesCircle} />
+            <FontAwesomeIcon icon={faTimesCircle} />           
           </Button>
+         
         </div>
+        
       </form>
     </>
   );

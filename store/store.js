@@ -2,7 +2,10 @@
  
 
 const {configureStore} = require("@reduxjs/toolkit");
-import reducer from './slice';
+import flightsReducer  from '../store/AvailabilitySlice';
 export const store = configureStore({
-    reducer  
+    reducer: {
+        flights: flightsReducer, // Ensure the key matches your slice name
+      },
 })
+export default store;
