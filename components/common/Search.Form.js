@@ -32,7 +32,7 @@ import { useRouter } from "next/router";
   const [childs , setChilds] = useState(0);
   const [infants , setInfants] = useState(0);
   const [cabin,setCabin] = useState('economy');
-  const [flightType , setFlightType] = useState('N');
+  const [flightType , setFlightType] = useState('');
   const [selectedFlightClass, setSelectedFlightClass] = useState('economy');
   const [apiResponse,setApiResponse] = useState('ready for hit');
   const dispatch = useDispatch();
@@ -108,7 +108,7 @@ import { useRouter } from "next/router";
  const DispatchData=()=>{
  
 let cabinclass 
-
+setApiResponse('Search is in progress please wait...')
 if (cabin.toLowerCase() === "premiumeconomy") {
   cabinclass = AirLineClass.PremiumEconomy;
 }
@@ -131,7 +131,15 @@ let dateTo = getFormattedDate(endDate);
 
 var flightData = { origin: deptAirport ,destination: arrivalAirport,  departureDate : datefrom , returnDate : dateTo , adults : adults , children : childs , infant : infants , cabinClass : cabinclass , flightType : flightType }
 try {
-  debugger; 
+  
+  dispatch(setFlights(flightData));
+  
+ } catch (error) {
+   console.error('Error calling setFlights:', error.message);
+   
+ }
+try {
+  //debugger; 
   dispatch(submitFlightData(flightData)).unwrap().then(()=>{
    router.push("/search-result");
  
@@ -140,6 +148,7 @@ try {
  } catch (error) {
    console.error('Error api call data:', error.message);
    alert(error);
+   setApiResponse('Error while search ' + error)
  }
 }
   const fromItems = [

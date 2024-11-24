@@ -10,9 +10,9 @@ export const submitFlightData = createAsyncThunk(
     'flights/submitFlightData',
     async (flightData, { rejectWithValue }) => {
       try {
-      
+      //  state.flights = { ...state.flights, flightData };
         console.log(flightData)
-        const response = await axios.post('https://flightreservationjays.azurewebsites.net/api/availability', flightData);
+        const response = await axios.post('https://localhost:44333/api/Availability', flightData);
         console.log(response.data)      
         return response.data; 
       } catch (error) {
@@ -45,6 +45,7 @@ const Slice = createSlice({
         departureDate: '',
         returnDate: '',
         adults: '',
+        children : '',
         infant: '',
         cabinClass: '',
         flightType: '',       
@@ -66,9 +67,17 @@ const Slice = createSlice({
           })
           .addCase(submitFlightData.fulfilled, (state, action) => {
            debugger;
+           if(action.payload.isSuccessful === false){
+            state.status = 'failed';
+            state.response = action.payload.data.error;
+            state.error = action.payload.response;
+           }
+           else{
             state.status = 'succeeded';
             state.response = action.payload;
             state.error = null;
+           }
+            
           })
           .addCase(submitFlightData.rejected, (state, action) => {
             state.status = 'failed';

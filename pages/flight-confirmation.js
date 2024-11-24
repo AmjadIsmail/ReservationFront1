@@ -3,8 +3,48 @@ import BreadcrumbSectionFc from "@/components/flightConfirmation/BreadcrumbSecti
 import FrontLayout from "@/components/layouts/Front.Layout";
 import Image from "next/image";
 import img1 from "@/public/images/flights/airlines/1.png";
+import { useRouter } from "next/router";
+import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useState } from 'react';
 
+
+const formatDateToCustomFormat = (dateString) => {
+  const date = new Date(dateString); 
+ 
+  const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+
+  return new Intl.DateTimeFormat('en-US', options)
+    .format(date)
+    .toUpperCase()
+    .replace(',', ''); 
+};
+
+let flight;
+
+function convertTimeFormat(timeString) {
+  if (!timeString || !timeString.includes(":")) {
+    return "Invalid Time";
+  }
+  const [hours, minutes] = timeString.split(":");
+  if (isNaN(hours) || isNaN(minutes)) {
+    return "Invalid Time";
+  }
+
+  return `${hours}h:${minutes}m`;
+}
 const FlightConfirmation = () => {
+  const currSign = '£';
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const flightResults = useSelector((state) => state.flights.response);
+  const flightRequest = useSelector((state) => state.flights.flights);
+  const airsellResults = useSelector((state) => state.airsell.response);
+  const airsellRequest = useSelector((state) => state.airsell.airSellRequest);
+  
+  debugger;
+  if(airsellRequest != null){
+    flight = flightResults.data.find(flight => flight.id === airsellRequest.flightId);
+  }
   return (
     <>
       <Meta title="Flight confirmation" />
@@ -25,16 +65,16 @@ const FlightConfirmation = () => {
                       <div class="col-md-3">
                         <div class="logo-sec">
                           <Image src={img1} class="img-fluid" alt="" />
-                          <span class="title">Egyptair</span>
+                          <span class="title">{airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.marketingCompanyName}</span>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="airport-part">
                           <div class="airport-name">
                             <h6>
-                              DXB <span>17.00</span>
+                              {airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.fromAirport} <span>  {airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.departureTime}</span>
                             </h6>
-                            <p>sat, 12 oct 2019</p>
+                            <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.departureDate)} </p>
                           </div>
                           <div class="airport-progress">
                             <i class="fas fa-plane-departure float-start"></i>
@@ -42,17 +82,17 @@ const FlightConfirmation = () => {
                           </div>
                           <div class="airport-name arrival">
                             <h6>
-                              CDG <span>17.00</span>
+                               {airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.fromAirport}<span> {airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.departureTime} </span>
                             </h6>
-                            <p>sat, 12 oct 2019</p>
+                            <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.departureDate)}</p>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="duration">
                           <div>
-                            <h6>20h 45m</h6>
-                            <p>1 stop</p>
+                            <h6> {convertTimeFormat(flight.itineraries[0].duration)}</h6>
+                            <p>{flight?.itineraries?.[0]?.segments?.length || 0} stop</p>
                           </div>
                         </div>
                       </div>
@@ -70,7 +110,7 @@ const FlightConfirmation = () => {
                           <h6>Cancellation Charges</h6>
                           <ul>
                             <li>
-                              airline fee : <span>$2012</span>
+                              airline fee : <span>{currSign}0</span>
                             </li>
                             <li>
                               This airline allows cancellation only before 2 hrs
@@ -82,7 +122,7 @@ const FlightConfirmation = () => {
                           <h6>Reschedule Charges</h6>
                           <ul>
                             <li>
-                              airline fee : <span>$2012</span>
+                              airline fee : <span>{currSign}0</span>
                             </li>
                             <li>
                               This airline allows reschedule only before 2 hrs
@@ -94,7 +134,7 @@ const FlightConfirmation = () => {
                           <h6>baggage policy</h6>
                           <ul>
                             <li>
-                              Check-in Baggage : <span>15 kg</span>
+                              Check-in Baggage : <span>10 kg</span>
                             </li>
                             <li>
                               Cabin Baggage: <span>7 kg</span>
@@ -260,26 +300,43 @@ const FlightConfirmation = () => {
                         <table class="table table-borderless">
                           <tbody>
                             <tr>
-                              <td>adults (3 X $2501)</td>
-                              <td>$250</td>
+                              <td>adults ({flightRequest.adults} X {currSign}{flight.price.adultPP})                              
+                              </td>
+                              <td>{currSign}{flightRequest.adults * flight.price.adultPP}</td>
                             </tr>
+                            {(flightRequest.children != 0 ?                              
+                              <tr>
+                              <td>
+                              ({flightRequest.children} X {currSign}{flight.price.childPp})                             
+                              </td>
+                              <td>{currSign}{flightRequest.children * flight.price.childPp}</td>
+                            </tr>
+                              : "")}     
+                                {(flightRequest.infant != 0 ?                              
+                              <tr>
+                              <td>
+                              ({flightRequest.infant} X {currSign}{flight.price.infantPp})                             
+                              </td>
+                              <td>{currSign}{flightRequest.infant * flight.price.infantPp}</td>
+                            </tr>
+                              : "")}                            
                             <tr>
                               <td>total taxes</td>
-                              <td>$25</td>
+                              <td>{currSign}{parseFloat(flight?.price?.adultTax) + parseFloat(flight?.price?.childTax) + parseFloat(flight?.price?.infantTax)}</td>
                             </tr>
                             <tr>
                               <td>Insurance</td>
-                              <td>$15</td>
+                              <td>{currSign}0</td>
                             </tr>
                             <tr>
                               <td>Convenience fee</td>
-                              <td>$18</td>
+                              <td>{currSign}0</td>
                             </tr>
                           </tbody>
                         </table>
                         <div class="grand_total">
                           <h5>
-                            grand total: <span>$2500</span>
+                            grand total: <span>{currSign}{flight?.price?.total}</span>
                           </h5>
                         </div>
                       </div>
