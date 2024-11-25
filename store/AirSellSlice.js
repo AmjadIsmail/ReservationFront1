@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import React from 'react';
 import { useSelector } from 'react-redux';
-const API_ENDPOINT = 'https://localhost:44333/api/AirSellFRC'
-//const API_ENDPOINT = 'https://flightreservationjays.azurewebsites.net/api/availability'
+//const API_ENDPOINT = 'https://localhost:44333/api/AirSellFRC'
+const API_ENDPOINT = 'https://flightreservationjays.azurewebsites.net/api/AirSellFRC'
 
 export const submitairSellRequest = createAsyncThunk(
     'flights/submitairSellRequest',
@@ -13,7 +13,7 @@ export const submitairSellRequest = createAsyncThunk(
       try {
       debugger;
         console.log(flightData)
-        const response = await axios.post('https://localhost:44333/api/AirSellFRC', flightData);
+        const response = await axios.post('https://flightreservationjays.azurewebsites.net/api/AirSellFRC', flightData);
         console.log(response.data)      
         return response.data; 
       } catch (error) {
@@ -87,6 +87,8 @@ const airSellSlice = createSlice({
            else{
             state.status = 'succeeded';
             state.response = action.payload;
+            const sessionData = action.payload.data.session;
+            localStorage.setItem("session", JSON.stringify(sessionData));
             state.error = null;
            }
            

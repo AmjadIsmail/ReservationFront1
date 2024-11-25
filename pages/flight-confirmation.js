@@ -42,7 +42,7 @@ const FlightConfirmation = () => {
   const airsellRequest = useSelector((state) => state.airsell.airSellRequest);
   
   debugger;
-  if(airsellRequest != null){
+  if(airsellRequest != null){    
     flight = flightResults.data.find(flight => flight.id === airsellRequest.flightId);
   }
   return (
@@ -307,7 +307,7 @@ const FlightConfirmation = () => {
                             {(flightRequest.children != 0 ?                              
                               <tr>
                               <td>
-                              ({flightRequest.children} X {currSign}{flight.price.childPp})                             
+                             children ({flightRequest.children} X {currSign}{flight.price.childPp})                             
                               </td>
                               <td>{currSign}{flightRequest.children * flight.price.childPp}</td>
                             </tr>
@@ -315,14 +315,15 @@ const FlightConfirmation = () => {
                                 {(flightRequest.infant != 0 ?                              
                               <tr>
                               <td>
-                              ({flightRequest.infant} X {currSign}{flight.price.infantPp})                             
+                              infants({flightRequest.infant} X {currSign}{flight.price.infantPp})                             
                               </td>
                               <td>{currSign}{flightRequest.infant * flight.price.infantPp}</td>
                             </tr>
                               : "")}                            
                             <tr>
                               <td>total taxes</td>
-                              <td>{currSign}{parseFloat(flight?.price?.adultTax) + parseFloat(flight?.price?.childTax) + parseFloat(flight?.price?.infantTax)}</td>
+                              <td>{currSign}{parseFloat(flight?.price?.adultTax) + parseFloat(flight?.price?.childTax) + parseFloat(flight?.price?.infantTax)}
+                              </td>
                             </tr>
                             <tr>
                               <td>Insurance</td>

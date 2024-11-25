@@ -8,7 +8,7 @@ import {
   faTimesCircle,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { submitFlightData,setFlights } from "@/store/AvailabilitySlice";
+import { submitFlightData,setFlights,SubmitSignout } from "@/store/AvailabilitySlice";
 import DatePicker from "react-datepicker";
 import { Button, Col, Input, Label, Row } from "reactstrap";
 import "react-datepicker/dist/react-datepicker.css";
@@ -128,6 +128,31 @@ let deptAirport = extractAirportCode(originAirport);
 let arrivalAirport  = extractAirportCode(destAirport);
 let datefrom = getFormattedDate(startDate);
 let dateTo = getFormattedDate(endDate);
+
+try {
+  debugger;
+  const storedSession = localStorage.getItem("session");
+  if (storedSession) {
+    const jsonObject = JSON.parse(storedSession);
+    const sessiondata = {
+      TransactionStatusCode: jsonObject.transactionStatusCode,
+      SessionId: jsonObject.sessionId,
+      SequenceNumber : jsonObject.sequenceNumber,
+      SecurityToken: jsonObject.securityToken
+    };
+    dispatch(SubmitSignout(sessiondata)).unwrap().then(()=>{
+    localStorage.removeItem("session");  
+   })
+   
+  } else {
+    console.log("No session data found in localStorage");
+  }
+  
+  
+ } catch (error) {
+   console.error('Error calling setFlights:', error.message);
+   
+ }
 
 var flightData = { origin: deptAirport ,destination: arrivalAirport,  departureDate : datefrom , returnDate : dateTo , adults : adults , children : childs , infant : infants , cabinClass : cabinclass , flightType : flightType }
 try {

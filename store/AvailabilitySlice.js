@@ -3,16 +3,16 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import React from 'react';
-//const API_ENDPOINT = 'https://flightreservationjays.azurewebsites.net/api/availability';
-const API_ENDPOINT = 'https://localhost:44333/api/Availability'
+const API_ENDPOINT = 'https://flightreservationjays.azurewebsites.net/api/availability';
+//const API_ENDPOINT = 'https://localhost:44333/api/Availability'
 
 export const submitFlightData = createAsyncThunk(
     'flights/submitFlightData',
     async (flightData, { rejectWithValue }) => {
       try {
-      //  state.flights = { ...state.flights, flightData };
+     
         console.log(flightData)
-        const response = await axios.post('https://localhost:44333/api/Availability', flightData);
+        const response = await axios.post('https://flightreservationjays.azurewebsites.net/api/availability', flightData);
         console.log(response.data)      
         return response.data; 
       } catch (error) {
@@ -23,6 +23,23 @@ export const submitFlightData = createAsyncThunk(
       }
     }
   );
+
+  export const SubmitSignout = createAsyncThunk(
+    'flights/SubmitSignout',
+    async (singoutRequest, { rejectWithValue }) => {
+      try {
+     debugger;
+        console.log(singoutRequest)
+        const response = await axios.post('https://flightreservationjays.azurewebsites.net/api/Availability/signout', singoutRequest);
+        console.log(response.data)      
+        return response.data; 
+      } catch (error) {        
+        console.log(error);
+       // return rejectWithValue(error?.data || 'Server Error');
+      }
+    }
+  );
+  
   /*export const fetchAvailability = createAsyncThunk(
     'availability/fetch', // Action type
     async (requestData, { rejectWithValue }) => {
