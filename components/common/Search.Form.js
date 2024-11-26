@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { AirLineClass } from "../classes/airlineclass";
 import { useNavigate } from "react-router-dom";
 import { useRouter } from "next/router";
+//import { getDate } from "react-datepicker/dist/date_utils";
   const SearchForm = (props) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -78,9 +79,11 @@ import { useRouter } from "next/router";
     setInfants(qty.valueInfants);
   };
   const handleDestAirportChange = (airport) => {
+    setApiResponse('')
     setDestAirport(airport);
   };  
   const handleOriginAirportChange = (airport) => {
+    setApiResponse('')
     setOriginAirport(airport);
   };  
   const handleFocus = () => {  
@@ -104,8 +107,41 @@ import { useRouter } from "next/router";
     return `${year}-${month}-${day}`;
   };
 
- 
+  const isToday = (date) => {
+    const today = new Date().toISOString().split('T')[0];
+    const dateToCheck = date ? new Date(date).toISOString().split('T')[0] : null; 
+    return dateToCheck === today;
+  };
+  const isStartDateGreater = (startDate, endDate) => {
+    if (!startDate || !endDate) return false; 
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return start > end  ; 
+  };
+ function verifydata(){  
+   
+    const isValid = (isToday(startDate) || isToday(endDate));
+    if(isValid) {
+    setApiResponse('Please provide valid from date and to date');
+    return false;}
+
+    if(destAirport === null || originAirport === null) {
+      setApiResponse('Origin and Destination both are required');
+      return false;}
+
+      if (isStartDateGreater(startDate, endDate)) {
+        setApiResponse("Start date is not valid");
+        return false;
+      }
+        return true;
+
+ }
  const DispatchData=()=>{
+
+  if(verifydata() === false){
+    return;
+  }
+  setApiResponse('')
  
 let cabinclass 
 setApiResponse('Search is in progress please wait...')
@@ -130,7 +166,7 @@ let datefrom = getFormattedDate(startDate);
 let dateTo = getFormattedDate(endDate);
 
 try {
-  debugger;
+ 
   const storedSession = localStorage.getItem("session");
   if (storedSession) {
     const jsonObject = JSON.parse(storedSession);
@@ -294,7 +330,8 @@ try {
               <DatePicker
                 className=" px12 form-control rounded-0"
                 selected={startDate}
-                onChange={(date) => setStartDate(date)}
+                onChange={(date) => { setStartDate(date); setApiResponse('');}}
+                //onChange={(date) => setStartDate()}
               />
 
               <div className="icon">
@@ -308,7 +345,8 @@ try {
               <DatePicker
                 className=" px12 form-control rounded-0"
                 selected={endDate}
-                onChange={(date) => setEndDate(date)}
+              //  onChange={(date) => setEndDate(date)}
+                onChange={(date) => { setEndDate(date); setApiResponse('');}}
               />
               <div className="icon">
                 <FontAwesomeIcon icon={faCalendar} />

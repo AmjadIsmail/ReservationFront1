@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import React from 'react';
+import axiosInstance from '@/utils/axiosInstance';
 const API_ENDPOINT = 'https://flightreservationjays.azurewebsites.net/api/availability';
 //const API_ENDPOINT = 'https://localhost:44333/api/Availability'
 
@@ -10,9 +11,9 @@ export const submitFlightData = createAsyncThunk(
     'flights/submitFlightData',
     async (flightData, { rejectWithValue }) => {
       try {
-     
+     debugger;
         console.log(flightData)
-        const response = await axios.post('https://flightreservationjays.azurewebsites.net/api/availability', flightData);
+        const response = await axiosInstance.post('availability', flightData);
         console.log(response.data)      
         return response.data; 
       } catch (error) {

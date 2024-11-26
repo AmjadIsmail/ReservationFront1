@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { submitairSellRequest,setAirSell } from "@/store/AirSellSlice";
 
-
+//const ImgUrl = "https://mainimageservice.azureedge.net/00-tup-web/images/airline/bigimages/";
 const results = [
   {
     id: 1,
@@ -319,7 +319,7 @@ const FlightResultsSr = () => {
                       <Row>
                                       <Col md={4}>
                                         <div className="logo-sec">
-                                          <Image src={img1} className="img-fluid" alt="" />
+                                          <Image src={img1} className="img-fluid" alt="" width={240} height={140}/>
                                           <span className="title">{item?.itineraries[0]?.segments[0]?.marketingCarrierName}</span>
                                         </div>
                                       </Col>
@@ -350,7 +350,7 @@ const FlightResultsSr = () => {
                         <Row>
                         <Col md={4}>
                           <div className="logo-sec">
-                            <Image src={img1} className="img-fluid" alt="" />
+                            <Image src={img2} className="img-fluid" alt="" width={240} height={140}/>
                             <span className="title">{item?.itineraries[0]?.segments[1]?.marketingCarrierName}</span>
                           </div>
                         </Col>
@@ -383,7 +383,7 @@ const FlightResultsSr = () => {
                         <Row>
                         <Col md={4}>
                           <div className="logo-sec">
-                            <Image src={img1} className="img-fluid" alt="" />
+                            <Image src={img3} className="img-fluid" alt="" width={240} height={140}/>
                             <span className="title">{item?.itineraries[0]?.segments[2]?.marketingCarrierName}</span>
                           </div>
                         </Col>
@@ -417,7 +417,7 @@ const FlightResultsSr = () => {
                       <Row>
                           <Col md={4}>                         
                               <div className="logo-sec">
-                                <Image src={img2} className="img-fluid" alt="" />
+                                <Image src={img4} className="img-fluid" alt="" width={240} height={140} />
                                 <span className="title">{item?.itineraries[1]?.segments[0]?.marketingCarrierName}</span>
                               </div>
                             </Col>
@@ -447,7 +447,7 @@ const FlightResultsSr = () => {
                          <Row>
                          <Col md={4}>
                            <div className="logo-sec">
-                             <Image src={img3} className="img-fluid" alt="" />
+                             <Image src={img5} className="img-fluid" alt="" width={240} height={140} />
                              <span className="title">{item.itineraries[1].segments[1].marketingCarrierName}</span>
                            </div>
                          </Col>
@@ -480,7 +480,7 @@ const FlightResultsSr = () => {
                          <Row>
                          <Col md={4}>
                            <div className="logo-sec">
-                             <Image src={img3} className="img-fluid" alt="" />
+                             <Image src={img6} className="img-fluid" alt="" width={240} height={140}/>
                              <span className="title">{item.itineraries[1].segments[2].marketingCarrierName}</span>
                            </div>
                          </Col>

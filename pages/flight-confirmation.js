@@ -60,8 +60,11 @@ const FlightConfirmation = () => {
                   <div class="title-top">
                     <h5>flight details</h5>
                   </div>
+                  <div class="title-top">
+                    <h6>Out Bound</h6>
+                  </div>
                   <div class="flight_detail">
-                    <div class="row">
+                    <div class="row"> {/** first row */}
                       <div class="col-md-3">
                         <div class="logo-sec">
                           <Image src={img1} class="img-fluid" alt="" />
@@ -82,9 +85,9 @@ const FlightConfirmation = () => {
                           </div>
                           <div class="airport-name arrival">
                             <h6>
-                               {airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.fromAirport}<span> {airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.departureTime} </span>
+                               {airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.toAirport}<span> {airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.arrivalTime} </span>
                             </h6>
-                            <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.departureDate)}</p>
+                            <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.arrivalDate)}</p>
                           </div>
                         </div>
                       </div>
@@ -97,6 +100,215 @@ const FlightConfirmation = () => {
                         </div>
                       </div>
                     </div>
+                    {                      
+                        airsellResults?.data?.airSellResponse[0]?.flightDetails?.length > 1 ? 
+                        (
+                          <div class="row"> {/** 2nd row */}
+                          <div class="col-md-3">
+                            <div class="logo-sec">
+                              <Image src={img1} class="img-fluid" alt="" />
+                              <span class="title">{airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.marketingCompanyName}</span>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="airport-part">
+                              <div class="airport-name">
+                                <h6>
+                                  {airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.fromAirport} <span>  {airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.departureTime}</span>
+                                </h6>
+                                <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.departureDate)} </p>
+                              </div>
+                              <div class="airport-progress">
+                                <i class="fas fa-plane-departure float-start"></i>
+                                <i class="fas fa-plane-arrival float-end"></i>
+                              </div>
+                              <div class="airport-name arrival">
+                                <h6>
+                                   {airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.toAirport}<span> {airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.arrivalTime} </span>
+                                </h6>
+                                <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.arrivalDate)}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="duration">
+                              <div>
+                                <h6> {convertTimeFormat(flight.itineraries[0].duration)}</h6>
+                                <p>{flight?.itineraries?.[0]?.segments?.length || 0} stop</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div> 
+
+                        ) : ""
+                    }
+                   {                      
+                        airsellResults?.data?.airSellResponse[0]?.flightDetails?.length > 2 ? 
+                        (
+                          <div class="row"> {/** 2nd row */}
+                          <div class="col-md-3">
+                            <div class="logo-sec">
+                              <Image src={img1} class="img-fluid" alt="" />
+                              <span class="title">{airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.marketingCompanyName}</span>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="airport-part">
+                              <div class="airport-name">
+                                <h6>
+                                  {airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.fromAirport} <span>  {airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.departureTime}</span>
+                                </h6>
+                                <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.departureDate)} </p>
+                              </div>
+                              <div class="airport-progress">
+                                <i class="fas fa-plane-departure float-start"></i>
+                                <i class="fas fa-plane-arrival float-end"></i>
+                              </div>
+                              <div class="airport-name arrival">
+                                <h6>
+                                   {airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.toAirport}<span> {airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.arrivalTime} </span>
+                                </h6>
+                                <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.arrivalDate)}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="duration">
+                              <div>
+                                <h6> {convertTimeFormat(flight.itineraries[0].duration)}</h6>
+                                <p>{flight?.itineraries?.[0]?.segments?.length || 0} stop</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div> 
+
+                        ) : ""
+                    }
+                  </div>
+                  <div class="title-top">
+                    <h6>In Bound</h6>
+                  </div>
+                  <div class="flight_detail">
+                    <div class="row"> {/** first row */}
+                      <div class="col-md-3">
+                        <div class="logo-sec">
+                          <Image src={img1} class="img-fluid" alt="" />
+                          <span class="title">{airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.marketingCompanyName}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="airport-part">
+                          <div class="airport-name">
+                            <h6>
+                              {airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.fromAirport} <span>  {airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.departureTime}</span>
+                            </h6>
+                            <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.departureDate)} </p>
+                          </div>
+                          <div class="airport-progress">
+                            <i class="fas fa-plane-departure float-start"></i>
+                            <i class="fas fa-plane-arrival float-end"></i>
+                          </div>
+                          <div class="airport-name arrival">
+                            <h6>
+                               {airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.toAirport}<span> {airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.arrivalTime} </span>
+                            </h6>
+                            <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.arrivalDate)}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="duration">
+                          <div>
+                            <h6> {convertTimeFormat(flight.itineraries[1].duration)}</h6>
+                            <p>{flight?.itineraries?.[1]?.segments?.length || 0} stop</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {                      
+                        airsellResults?.data?.airSellResponse[1]?.flightDetails?.length > 1 ? 
+                        (
+                          <div class="row"> {/** 2nd row */}
+                          <div class="col-md-3">
+                            <div class="logo-sec">
+                              <Image src={img1} class="img-fluid" alt="" />
+                              <span class="title">{airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.marketingCompanyName}</span>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="airport-part">
+                              <div class="airport-name">
+                                <h6>
+                                  {airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.fromAirport} <span>  {airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.departureTime}</span>
+                                </h6>
+                                <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.departureDate)} </p>
+                              </div>
+                              <div class="airport-progress">
+                                <i class="fas fa-plane-departure float-start"></i>
+                                <i class="fas fa-plane-arrival float-end"></i>
+                              </div>
+                              <div class="airport-name arrival">
+                                <h6>
+                                   {airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.toAirport}<span> {airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.arrivalTime} </span>
+                                </h6>
+                                <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.arrivalDate)}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="duration">
+                              <div>
+                                <h6> {convertTimeFormat(flight.itineraries[1].duration)}</h6>
+                                <p>{flight?.itineraries?.[1]?.segments?.length || 0} stop</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div> 
+
+                        ) : ""
+                    }
+                   {                      
+                        airsellResults?.data?.airSellResponse[1]?.flightDetails?.length > 2 ? 
+                        (
+                          <div class="row"> {/** 2nd row */}
+                          <div class="col-md-3">
+                            <div class="logo-sec">
+                              <Image src={img1} class="img-fluid" alt="" />
+                              <span class="title">{airsellResults?.data?.airSellResponse[1]?.flightDetails[2]?.marketingCompanyName}</span>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="airport-part">
+                              <div class="airport-name">
+                                <h6>
+                                  {airsellResults?.data?.airSellResponse[1]?.flightDetails[2]?.fromAirport} <span>  {airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.departureTime}</span>
+                                </h6>
+                                <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[1]?.flightDetails[2]?.departureDate)} </p>
+                              </div>
+                              <div class="airport-progress">
+                                <i class="fas fa-plane-departure float-start"></i>
+                                <i class="fas fa-plane-arrival float-end"></i>
+                              </div>
+                              <div class="airport-name arrival">
+                                <h6>
+                                   {airsellResults?.data?.airSellResponse[1]?.flightDetails[2]?.toAirport}<span> {airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.arrivalTime} </span>
+                                </h6>
+                                <p>{formatDateToCustomFormat(airsellResults?.data?.airSellResponse[1]?.flightDetails[2]?.arrivalDate)}</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="duration">
+                              <div>
+                                <h6> {convertTimeFormat(flight.itineraries[1].duration)}</h6>
+                                <p>{flight?.itineraries?.[1]?.segments?.length || 0} stop</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div> 
+
+                        ) : ""
+                    }
                   </div>
                 </div>
                 <div class="review_box">
@@ -322,7 +534,10 @@ const FlightConfirmation = () => {
                               : "")}                            
                             <tr>
                               <td>total taxes</td>
-                              <td>{currSign}{parseFloat(flight?.price?.adultTax) + parseFloat(flight?.price?.childTax) + parseFloat(flight?.price?.infantTax)}
+                              <td>{currSign}{                                
+                              parseFloat(flight?.price?.adultTax) || 0 + parseFloat(flight?.price?.childTax) || 0 + parseFloat(flight?.price?.infantTax ) || 0
+                             
+                              }
                               </td>
                             </tr>
                             <tr>
