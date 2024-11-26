@@ -1386,15 +1386,53 @@ section .black-layer:before {
 }
 
 .headerHome {
-  position: relative;
-  background-image: url("/images/bg-flight.png");
-  overflow: hidden;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
   height: 100vh;
-  z-index: 1;
-  top: 0;
+
+  .slides {
+    position: relative;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: 1;
+    top: 0;
+    height: 100vh;
+  }
+  .container {
+    position: relative;
+    z-index: 3;
+  }
+
+  .slick-dots {
+    bottom: 30px;
+    li {
+      width: 24px;
+      height: 24px;
+
+      &.slick-active {
+        button {
+          &::before {
+            font-size: 24px;
+            color: $c3;
+            opacity: 1;
+          }
+        }
+      }
+      button {
+        width: 24px;
+        height: 24px;
+
+        &::before {
+          width: 24px;
+          height: 24px;
+          font-size: 24px;
+          color: $white;
+          opacity: 1;
+          line-height: 24px;
+        }
+      }
+    }
+  }
 
   h2,
   h3 {

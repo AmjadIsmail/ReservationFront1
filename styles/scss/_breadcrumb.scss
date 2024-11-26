@@ -1298,7 +1298,7 @@
     max-width: 74%;
   }
   .flight-detail-sec .detail-bar .detail-wrap {
-    padding: 10px 15px 15px;
+    padding: 0px 0px 15px;
   }
   .flight-detail-sec .detail-bar .detail-wrap .airport-part {
     width: 70%;
@@ -1307,6 +1307,12 @@
   .flight-detail-sec .detail-bar .detail-wrap .price {
     display: block;
     margin-top: 30px;
+
+    @media (max-width: 991px) {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #e2e5e9;
+    }
   }
   .flight-detail-sec .detail-bar .detail-wrap .book-flight {
     margin-top: 5px;

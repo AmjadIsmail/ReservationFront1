@@ -98,42 +98,61 @@
       opacity: 1;
     }
   }
-  // &-c4 {
-  //   background-color: $c4;
-  //   color: $c1;
+  &-c4 {
+    background-color: $c4;
+    color: $c1;
 
-  //   &:hover,
-  //   &:focus,
-  //   &:active {
-  //     background-color: $c4 !important;
-  //     color: $c1 !important;
-  //     border-color: rgba($c4, 0) !important;
-  //   }
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $c4 !important;
+      color: $c1 !important;
+      border-color: rgba($c4, 0) !important;
+    }
 
-  //   &:disabled {
-  //     background-color: rgba($c1, 0.2) !important;
-  //     color: rgba($white, 0.8) !important;
-  //     border-color: rgba($c1, 0) !important;
-  //   }
-  // }
-  // &-c5 {
-  //   background-color: $c5;
-  //   color: $c1;
+    &:disabled {
+      background-color: rgba($c1, 0.2) !important;
+      color: rgba($white, 0.8) !important;
+      border-color: rgba($c1, 0) !important;
+    }
+  }
+  &-c5 {
+    background-color: $c5;
+    color: $c1;
 
-  //   &:hover,
-  //   &:focus,
-  //   &:active {
-  //     background-color: $c5 !important;
-  //     color: $c1 !important;
-  //     border-color: rgba($c4, 0) !important;
-  //   }
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $c5 !important;
+      color: $c1 !important;
+      border-color: rgba($c4, 0) !important;
+    }
 
-  //   &:disabled {
-  //     background-color: rgba($c1, 0.2) !important;
-  //     color: rgba($white, 0.8) !important;
-  //     border-color: rgba($c1, 0) !important;
-  //   }
-  // }
+    &:disabled {
+      background-color: rgba($c1, 0.2) !important;
+      color: rgba($white, 0.8) !important;
+      border-color: rgba($c1, 0) !important;
+    }
+  }
+  &-c6 {
+    background-color: $c6;
+    color: $white;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $white !important;
+      color: $c6 !important;
+      border: 1px solid rgba($c6, 1) !important;
+      box-shadow: 1px 11px 20px 0px rgba($c6, 0.22);
+    }
+
+    &:disabled {
+      background-color: rgba($c1, 0.2) !important;
+      color: rgba($white, 0.8) !important;
+      border-color: rgba($c1, 0) !important;
+    }
+  }
 
   &-white {
     background-color: $white;
@@ -218,46 +237,46 @@
         border-color: $c3;
       }
     }
-    // &-c4 {
-    //   border-color: $c4;
-    //   color: $c4;
-    //   border-width: 1px;
+    &-c4 {
+      border-color: $c4;
+      color: $c4;
+      border-width: 1px;
 
-    //   // &:hover,
-    //   // &:focus,
-    //   // &:active {
-    //   //   color: $c2a !important;
-    //   //   border-color: $c2a !important;
-    //   // }
-    //   &:active {
-    //     background-color: rgba($white, 0.16) !important;
-    //   }
-    //   &:disabled {
-    //     background-color: rgba($white, 0) !important;
-    //     color: rgba($white, 0.4) !important;
-    //     border-color: rgba($white, 0.4) !important;
-    //   }
-    // }
-    // &-c5 {
-    //   border-color: $c5;
-    //   color: $c1;
-    //   border-width: 1px;
+      // &:hover,
+      // &:focus,
+      // &:active {
+      //   color: $c2a !important;
+      //   border-color: $c2a !important;
+      // }
+      &:active {
+        background-color: rgba($white, 0.16) !important;
+      }
+      &:disabled {
+        background-color: rgba($white, 0) !important;
+        color: rgba($white, 0.4) !important;
+        border-color: rgba($white, 0.4) !important;
+      }
+    }
+    &-c5 {
+      border-color: $c5;
+      color: $c1;
+      border-width: 1px;
 
-    //   &:hover,
-    //   &:focus,
-    //   &:active {
-    //     // color: $c2a !important;
-    //     border-color: $c5 !important;
-    //   }
-    //   &:active {
-    //     background-color: rgba($white, 0.16) !important;
-    //   }
-    //   &:disabled {
-    //     background-color: rgba($white, 0) !important;
-    //     color: rgba($white, 0.4) !important;
-    //     border-color: rgba($white, 0.4) !important;
-    //   }
-    // }
+      &:hover,
+      &:focus,
+      &:active {
+        // color: $c2a !important;
+        border-color: $c5 !important;
+      }
+      &:active {
+        background-color: rgba($white, 0.16) !important;
+      }
+      &:disabled {
+        background-color: rgba($white, 0) !important;
+        color: rgba($white, 0.4) !important;
+        border-color: rgba($white, 0.4) !important;
+      }
+    }
 
     &-black {
       border-color: $black;

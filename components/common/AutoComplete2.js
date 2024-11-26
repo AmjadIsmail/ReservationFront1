@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import React, { useState, useEffect } from "react";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { faCrosshairs } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import airportsData from '../../src/util/AirportNames.json';
+import airportsData from "@/src/util/AirportNames.json";
 
 const AirportSearch = ({ placeholder, className, icon ,onAirportSelect }) => {
     const [items, setItems] = useState([])
@@ -82,6 +82,6 @@ const AirportSearch = ({ placeholder, className, icon ,onAirportSelect }) => {
         </div>
       </div>
     </>
-  )
+  );
 };
-export default AirportSearch
+export default AirportSearch;

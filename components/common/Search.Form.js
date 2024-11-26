@@ -215,20 +215,20 @@ try {
   const fromItems = [
     {
       id: 0,
-      country: "LON paris, france",
-      destination: "LON Charles de Gaulle Airport",
-      extension: "LON par",
+      country: "paris, france",
+      destination: "Charles de Gaulle Airport",
+      extension: "par",
     },
     {
       id: 1,
-      country: "DXB Dubai, UAE",
-      destination: "DXB Dubai International Airport",
+      country: "Dubai, UAE",
+      destination: "Dubai International Airport",
       extension: "par",
     },
     {
       id: 2,
-      country: "london LHR",
-      destination: "LHR Heathrow",
+      country: "london",
+      destination: "Heathrow",
       extension: "par",
     },
     {
@@ -306,6 +306,30 @@ try {
         <Row className="g-lg-3 g-0 m-0 align-items-end">
           <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
             {props.showLabel && <Label>from</Label>}
+            {/* <input type="text" value={value} onChange={onChange} /> */}
+            <div className="dropdown">
+          {data
+            .filter((item) => {
+              const searchTerm = value.toLowerCase();
+              const fullName = item.full_name;
+
+              return (
+                searchTerm &&
+                fullName.startsWith(searchTerm) &&
+                fullName !== searchTerm
+              );
+            })
+            .slice(0, 10)
+            .map((item) => (
+              <div
+                onClick={() => onSearch(item.full_name)}
+                className="dropdown-row"
+                key={item.full_name}
+              >
+                {item.full_name}
+              </div>
+            ))}
+        </div>
             <AutoComplete2
               items={fromItems}
               placeholder="Form"

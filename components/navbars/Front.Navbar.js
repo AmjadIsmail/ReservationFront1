@@ -50,16 +50,16 @@ const FrontNavbar = (props) => {
               Contact
             </Button> */}
             <Input type="select">
-              <option value="volvo">USD</option>
-              <option value="saab">EUR</option>
+              <option value="volvo">GBP</option>
+              {/* <option value="saab">EUR</option>
               <option value="opel">INR</option>
-              <option value="audi">AUD</option>
+              <option value="audi">AUD</option> */}
             </Input>
             <Input type="select" className="ms15">
               <option value="volvo">ENG</option>
-              <option value="saab">FRE</option>
+              {/* <option value="saab">FRE</option>
               <option value="opel">SPA</option>
-              <option value="audi">DUT</option>
+              <option value="audi">DUT</option> */}
             </Input>
             <Button
               size="md"

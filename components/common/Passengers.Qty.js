@@ -1,8 +1,7 @@
 import  React, {useState } from "react";
 import { Button, FormGroup, Input, Label } from "reactstrap";
 
-const 
-PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassValue ,onFocus ,onGuestsChange,updateshow , parentcabin  }) => {  
+const PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassValue ,onFocus ,onGuestsChange,updateshow , parentcabin  }) => {  
   const [valueAdult, setValueAdult] = useState(adultsValue);
   const [valueChildren, setValueChildren] = useState(childsValue);
   const [valueInfants , setValueInfants] = useState(infantsValue);
@@ -159,6 +158,33 @@ PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassValue ,on
               className="text-c5"
               onClick={() => handleIncrementInfants()}
               >+
+            </Button>
+          </div>
+        </div>
+        <div className="rowSt mt10">
+          <Label>Infant</Label>
+
+          <div className="inputGp">
+            <Button
+              color="transparent"
+              className="text-c5"
+              onClick={handleDecrementInfant}
+            >
+              -
+            </Button>
+            <Input
+              type="text"
+              value={valueInfant}
+              onChange={handleChangeInfant}
+              min="1"
+              className="w30px p-0 text-center border-0 rounded-0"
+            />
+            <Button
+              color="transparent"
+              className="text-c5"
+              onClick={handleIncrementInfant}
+            >
+              +
             </Button>
           </div>
         </div>
