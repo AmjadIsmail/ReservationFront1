@@ -305,31 +305,7 @@ try {
       <form className="searchForm">
         <Row className="g-lg-3 g-0 m-0 align-items-end">
           <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
-            {props.showLabel && <Label>from</Label>}
-            {/* <input type="text" value={value} onChange={onChange} /> */}
-            <div className="dropdown">
-          {data
-            .filter((item) => {
-              const searchTerm = value.toLowerCase();
-              const fullName = item.full_name;
-
-              return (
-                searchTerm &&
-                fullName.startsWith(searchTerm) &&
-                fullName !== searchTerm
-              );
-            })
-            .slice(0, 10)
-            .map((item) => (
-              <div
-                onClick={() => onSearch(item.full_name)}
-                className="dropdown-row"
-                key={item.full_name}
-              >
-                {item.full_name}
-              </div>
-            ))}
-        </div>
+            {props.showLabel && <Label>from</Label>}          
             <AutoComplete2
               items={fromItems}
               placeholder="Form"

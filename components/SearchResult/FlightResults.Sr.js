@@ -285,7 +285,6 @@ const FlightResultsSr = () => {
      alert(error);
    }
   }
-
   if(flightResults != null){
   //  debugger;
     return (
@@ -304,9 +303,10 @@ const FlightResultsSr = () => {
         </Row>
       </div>
       <div className="detail-bar">
-        {results.map((item, index) => {
+        {
+      flightResults?.data?.map((item, index) => {   
           return (
-            <div className="detail-wrap border rounded-3 wow fadeInUp">
+            <div className="detail-wrap border rounded-3 wow fadeInUp" key={item.id}>
               <div className="border-bottom  p-3">
                 <Row className="align-items-center">
                   <Col md={9}>
@@ -330,34 +330,96 @@ const FlightResultsSr = () => {
                       <div className="peLg30 mb-lg-0 mb15">
                         <Row>
                           <Col md={4}>
-                            <div className="logo-sec">
-                              <Image
-                                src={item.img}
-                                className="img-fluid"
-                                alt=""
-                              />
-                              <span className="title">{item.title}</span>
-                            </div>
+                          <div className="logo-sec">
+                            <Image src={img1} className="img-fluid" alt=""/>
+                          <span className="title">{item?.itineraries[0]?.segments[0]?.marketingCarrierName}</span>
+                        </div>
                           </Col>
                           <Col md={8}>
-                            <div className="airport-part">
-                              <div className="airport-name">
-                                <h4>{item.depTime}</h4>
-                                <h6>{item.depAriport}</h6>
-                              </div>
-                              <div className="airport-progress">
-                                <i className="fas fa-plane-departure float-start"></i>
-                                <i className="fas fa-plane-arrival float-end"></i>
-                                <div className="stop">{item.stop}</div>
-                              </div>
-                              <div className="airport-name arrival">
-                                <h4>{item.arrTime}</h4>
-                                <h6>{item.arrAriport}</h6>
-                              </div>
+                          <div className="airport-part">
+                            <div className="airport-name">
+                              <h4>{formatDateTime(item?.itineraries[0]?.segments[0]?.departure?.at)}</h4>
+                              <h6>{item?.itineraries[0]?.segments[0]?.departure?.iataCode }</h6>
                             </div>
+                            <div className="airport-progress">
+                              <i className="fas fa-plane-departure float-start"></i>
+                              <i className="fas fa-plane-arrival float-end"></i>
+                              <div className="stop">{item?.itineraries[0]?.segments[0]?.numberOfStops}</div>
+                            </div>
+                            <div className="airport-name arrival">
+                              <h4>{formatDateTime(item?.itineraries[0]?.segments[0]?.arrival?.at)}</h4>
+                              <h6>{item?.itineraries[0]?.segments[0]?.arrival?.iataCode }</h6>
+                            </div>
+                          </div>
                           </Col>
                           <Col md={3}></Col>
                         </Row>
+                        {
+                        
+                        item?.itineraries[0]?.segments?.length > 1 ? 
+                        (
+                         <Row>
+                         <Col md={4}>
+                           <div className="logo-sec">
+                             <Image src={img2} className="img-fluid" alt="" width={240} height={140}/>
+                             <span className="title">{item?.itineraries[0]?.segments[1]?.marketingCarrierName}</span>
+                           </div>
+                         </Col>
+                         <Col md={8}>
+                           <div className="airport-part">
+                             <div className="airport-name">
+                               <h4>{formatDateTime(item?.itineraries[0]?.segments[1]?.departure?.at)}</h4>
+                               <h6>{item?.itineraries[0]?.segments[1]?.departure?.iataCode }</h6>
+                             </div>
+                             <div className="airport-progress">
+                               <i className="fas fa-plane-departure float-start"></i>
+                               <i className="fas fa-plane-arrival float-end"></i>
+                               <div className="stop">{item?.itineraries[0]?.segments[1]?.numberOfStops}</div>
+                             </div>
+                             <div className="airport-name arrival">
+                               <h4>{formatDateTime(item?.itineraries[0]?.segments[1]?.arrival?.at)}</h4>
+                               <h6>{item?.itineraries[0]?.segments[1]?.arrival?.iataCode }</h6>
+                             </div>
+                           </div>
+                         </Col>
+                         <Col md={3}></Col>
+                      </Row>  
+                        ) : ""
+                       } 
+ 
+                         {
+                         
+                        item?.itineraries[0]?.segments?.length > 2 ? 
+                        (
+                         <Row>
+                         <Col md={4}>
+                           <div className="logo-sec">
+                             <Image src={img3} className="img-fluid" alt="" width={240} height={140}/>
+                             <span className="title">{item?.itineraries[0]?.segments[2]?.marketingCarrierName}</span>
+                           </div>
+                         </Col>
+                         <Col md={8}>
+                           <div className="airport-part">
+                             <div className="airport-name">
+                               <h4>{formatDateTime(item?.itineraries[0]?.segments[2]?.departure?.at)}</h4>
+                               <h6>{item?.itineraries[0]?.segments[2]?.departure?.iataCode }</h6>
+                             </div>
+                             <div className="airport-progress">
+                               <i className="fas fa-plane-departure float-start"></i>
+                               <i className="fas fa-plane-arrival float-end"></i>
+                               <div className="stop">{item?.itineraries[0]?.segments[2]?.numberOfStops}</div>
+                             </div>
+                             <div className="airport-name arrival">
+                               <h4>{formatDateTime(item?.itineraries[0]?.segments[2]?.arrival?.at)}</h4>
+                               <h6>{item?.itineraries[0]?.segments[2]?.arrival?.iataCode }</h6>
+                             </div>
+                           </div>
+                         </Col>
+                         <Col md={3}></Col>
+                      </Row>  
+                        ) : ""
+                       } 
+ 
                       </div>
                     </div>
                     <div className="inbound">
@@ -369,43 +431,105 @@ const FlightResultsSr = () => {
                       <div className="peLg30">
                         <Row>
                           <Col md={4}>
-                            <div className="logo-sec">
-                              <Image
-                                src={item.img}
-                                className="img-fluid"
-                                alt=""
-                              />
-                              <span className="title">{item.title}</span>
-                            </div>
+                          <div className="logo-sec">
+                                <Image src={img4} className="img-fluid" alt="" width={240} height={140} />
+                                <span className="title">{item?.itineraries[1]?.segments[0]?.marketingCarrierName}</span>
+                          </div>
                           </Col>
                           <Col md={8}>
-                            <div className="airport-part">
-                              <div className="airport-name">
-                                <h4>{item.depTime}</h4>
-                                <h6>{item.depAriport}</h6>
+                              <div className="airport-part">
+                                <div className="airport-name">
+                                <h4>{formatDateTime(item?.itineraries[1]?.segments[0].departure.at)}</h4>
+                                <h6>{item?.itineraries[1]?.segments[0]?.departure?.iataCode + " - " + item?.itineraries[1]?.segments[0]?.departure?.iataName}</h6>
+                                </div>
+                                <div className="airport-progress">
+                                  <i className="fas fa-plane-departure float-start"></i>
+                                  <i className="fas fa-plane-arrival float-end"></i>
+                                  <div className="stop">{item?.itineraries[1]?.segments[0]?.numberOfStops}</div>
+                                </div>
+                                <div className="airport-name arrival">
+                                <h4>{formatDateTime(item?.itineraries[1]?.segments[0]?.arrival?.at)}</h4>
+                                <h6>{item?.itineraries[1]?.segments[0]?.arrival?.iataCode + " - " + item?.itineraries[1]?.segments[0]?.arrival?.iataName}</h6>
+                                </div>
                               </div>
-                              <div className="airport-progress">
-                                <i className="fas fa-plane-departure float-start"></i>
-                                <i className="fas fa-plane-arrival float-end"></i>
-                                <div className="stop">{item.stop}</div>
-                              </div>
-                              <div className="airport-name arrival">
-                                <h4>{item.arrTime}</h4>
-                                <h6>{item.arrAriport}</h6>
-                              </div>
-                            </div>
-                          </Col>
-                          <Col md={3}></Col>
+                            </Col>
+                            <Col md={3}></Col>  
                         </Row>
+                        {
+                        
+                        item?.itineraries[1]?.segments?.length > 1 ? 
+                        (
+                         <Row>
+                         <Col md={4}>
+                           <div className="logo-sec">
+                             <Image src={img5} className="img-fluid" alt="" width={240} height={140} />
+                             <span className="title">{item.itineraries[1].segments[1].marketingCarrierName}</span>
+                           </div>
+                         </Col>
+                         <Col md={8}>
+                           <div className="airport-part">
+                             <div className="airport-name">
+                               <h4>{formatDateTime(item.itineraries[1].segments[1].departure.at)}</h4>
+                               <h6>{item.itineraries[1].segments[1].departure.iataCode + " - " + item.itineraries[1].segments[1].departure.iataName}</h6>
+                             </div>
+                             <div className="airport-progress">
+                               <i className="fas fa-plane-departure float-start"></i>
+                               <i className="fas fa-plane-arrival float-end"></i>
+                               <div className="stop">{item.itineraries[1].segments[1].numberOfStops}</div>
+                             </div>
+                             <div className="airport-name arrival">
+                               <h4>{formatDateTime(item.itineraries[1].segments[1].arrival.at)}</h4>
+                               <h6>{item.itineraries[1].segments[1].arrival.iataCode + " - " + item.itineraries[1].segments[1].arrival.iataName}</h6>
+                             </div>
+                           </div>
+                         </Col>
+                         <Col md={3}></Col>
+                         </Row>  
+                        ) : ""
+                       }  
+
+                          {
+                        
+                        item?.itineraries[1]?.segments?.length > 2 ? 
+                        (
+                         <Row>
+                         <Col md={4}>
+                           <div className="logo-sec">
+                             <Image src={img6} className="img-fluid" alt="" width={240} height={140}/>
+                             <span className="title">{item.itineraries[1].segments[2].marketingCarrierName}</span>
+                           </div>
+                         </Col>
+                         <Col md={8}>
+                           <div className="airport-part">
+                             <div className="airport-name">
+                               <h4>{formatDateTime(item.itineraries[1].segments[2].departure.at)}</h4>
+                               <h6>{item.itineraries[1].segments[2].departure.iataCode + " - " + item.itineraries[1].segments[2].departure.iataName}</h6>
+                             </div>
+                             <div className="airport-progress">
+                               <i className="fas fa-plane-departure float-start"></i>
+                               <i className="fas fa-plane-arrival float-end"></i>
+                               <div className="stop">{item.itineraries[1].segments[2].numberOfStops}</div>
+                             </div>
+                             <div className="airport-name arrival">
+                               <h4>{formatDateTime(item.itineraries[1].segments[2].arrival.at)}</h4>
+                               <h6>{item.itineraries[1].segments[2].arrival.iataCode + " - " + item.itineraries[1].segments[2].arrival.iataName}</h6>
+                             </div>
+                           </div>
+                         </Col>
+                         <Col md={3}></Col>
+                      </Row>  
+                        ) : ""
+                       } 
                       </div>
                     </div>
                   </div>
                 </Col>
                 <Col md={3}>
-                  <div className="price mb10">
-                    <div>
-                      <h2>${item.price}</h2>
-                      <span>{item.refundable}</span>
+                    <div className="price mb10">
+                      <div>
+                        <h2>{item.price.currency === "GBP" ? "£" : "$"} {item.price.total}</h2>
+                        <span>{"non refundable"}</span>
+                      </div>
                     </div>
                     <div className="book-flight">
                       <Button onClick={() => handleClick(item.id)} color="c3">

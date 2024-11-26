@@ -6,7 +6,7 @@ const FrontLayout = (props) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       import("wowjs").then((WOW) => {
-        new WOW.WOW().init();
+      //  new WOW.WOW().init();
       });
     }
   }, []);

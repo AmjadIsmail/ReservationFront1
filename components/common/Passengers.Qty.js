@@ -161,35 +161,8 @@ const PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassVal
             </Button>
           </div>
         </div>
-        <div className="rowSt mt10">
-          <Label>Infant</Label>
-
-          <div className="inputGp">
-            <Button
-              color="transparent"
-              className="text-c5"
-              onClick={handleDecrementInfant}
-            >
-              -
-            </Button>
-            <Input
-              type="text"
-              value={valueInfant}
-              onChange={handleChangeInfant}
-              min="1"
-              className="w30px p-0 text-center border-0 rounded-0"
-            />
-            <Button
-              color="transparent"
-              className="text-c5"
-              onClick={handleIncrementInfant}
-            >
-              +
-            </Button>
-          </div>
-        </div>
-
-        <div className="flightClass">
+       
+       <div className="flightClass">
         <Label check className="mt7 mb4">
             <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('economy')}  checked={selectedClassValue === 'economy'} /> economy
           </Label>  
