@@ -306,13 +306,16 @@ const FlightResultsSr = () => {
         {
       flightResults?.data?.map((item, index) => {   
           return (
+            
             <div className="detail-wrap border rounded-3 wow fadeInUp" key={item.id}>
               <div className="border-bottom  p-3">
                 <Row className="align-items-center">
                   <Col md={9}>
                     <h5 className="mb-0">
-                      London <i className="fas fa-arrow-right fa-1x textC3"></i>{" "}
-                      Dubai
+                   {flightRequest.origin}
+                  <i className="fas fa-arrow-right fa-1x textC3"></i>
+                  {" "}
+                  {flightRequest.destination}
                     </h5>
                   </Col>
                 </Row>
