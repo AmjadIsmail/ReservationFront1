@@ -4,11 +4,9 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import React from 'react';
 import axiosInstance from '@/utils/axiosInstance';
-//const API_ENDPOINT = 'https://flightreservationjays.azurewebsites.net/api/availability';
-//const API_ENDPOINT = 'https://localhost:44333/api/Availability'
 
-export const submitFlightData = createAsyncThunk(
-    'flights/submitFlightData',
+export const PNR_multi_request = createAsyncThunk(
+    'flights/PNR_multi_request',
     async (flightData, { rejectWithValue }) => {
       try {
      debugger;
@@ -31,16 +29,29 @@ export const submitFlightData = createAsyncThunk(
       try {
      debugger;
         console.log(singoutRequest)
-        const response = await axiosInstance.post('availability/signout', singoutRequest);
+        const response = await axios.post('https://flightreservationjays.azurewebsites.net/api/Availability/signout', singoutRequest);
         console.log(response.data)      
         return response.data; 
       } catch (error) {        
         console.log(error);
+       // return rejectWithValue(error?.data || 'Server Error');
       }
     }
   );
   
- const Slice = createSlice({  
+  /*export const fetchAvailability = createAsyncThunk(
+    'availability/fetch', // Action type
+    async (requestData, { rejectWithValue }) => {
+      try {
+        const response = await axios.post('http://localhost:44433/api/availability', requestData);
+        return response.data; // This becomes the fulfilled payload
+      } catch (error) {
+        return rejectWithValue(error.response?.data || error.message); // Handle errors
+      }
+    }
+  );*/
+ 
+const Slice = createSlice({  
  
     name : 'flights',
     initialState : {     
