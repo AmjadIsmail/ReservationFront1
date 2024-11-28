@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import {useDispatch, useSelector} from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Input, Label, Row } from "reactstrap";
-
+import { PNR_Multi,Create_Fop,Fare_Price_Pnr,Create_Tst,Commit_Pnr } from "@/store/CreatePnrSlice";
 
 const formatDateToCustomFormat = (dateString) => {
   const date = new Date(dateString); 
@@ -41,6 +41,8 @@ const FlightConfirmation = () => {
   const flightRequest = useSelector((state) => state.flights.flights);
   const airsellResults = useSelector((state) => state.airsell.response);
   const airsellRequest = useSelector((state) => state.airsell.airSellRequest);
+  const [email,setEmail] = useState('');
+  const [phone,setPhone] = useState('');
   const [formData, setFormData] = useState({
     adults: Array.from({ length: flightRequest.adults }, () => ({
       firstName: "",
@@ -59,6 +61,79 @@ const FlightConfirmation = () => {
     })),
   });
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
+  };
+  function CreatePnrMultiRequest(formData){
+
+    const storedSession = localStorage.getItem("session");
+    if (storedSession) {
+      const jsonObject = JSON.parse(storedSession);
+      const session = {
+        transactionStatusCode: jsonObject.transactionStatusCode,
+        sessionId: jsonObject.sessionId,
+        sequenceNumber : jsonObject.sequenceNumber,
+        securityToken: jsonObject.securityToken
+      }
+      const passengers  =[];
+      formData.adults.forEach((adult, index) => {
+        if(index == 0){
+          passengers.push({
+            firstName: adult.firstName,
+            surName: adult.lastName,
+            type: "ADT", // Adult type
+            dob: "01-01-1980", //adult.dob,
+            isLeadPassenger: true, // First adult as lead passenger
+            number: index + 1,
+            email: email,
+            phone: phone,
+          });
+        }
+        else{
+          passengers.push({
+            firstName: adult.firstName,
+            surName: adult.lastName,
+            type: "ADT", // Adult type
+            dob: "01-01-1980", //adult.dob,
+            isLeadPassenger: false, // First adult as lead passenger
+            number: index + 1,
+            email: '',          
+          });
+        }        
+      });
+
+      formData.children.forEach((child, index) => {
+        passengers.push({
+          firstName: child.firstName,
+          surName: child.lastName,
+          type: "CHD", // Child type
+          dob: "02-01-2024", //child.dob,         
+          number: formData.adults.length + index + 1,
+          email: "",
+        });
+      });
+
+      formData.infants.forEach((infant, index) => {
+        passengers.push({
+          firstName: infant.firstName,
+          surName: infant.lastName,
+          type: "INF", // Infant type
+          dob: "02-01-2024",//infant.dob,          
+          number: formData.adults.length + formData.children.length + index + 1,
+          email: "",
+        });
+      });
+
+      const request = {
+        sessionDetails : session,
+        passengerDetails: passengers,
+      };
+      
+  }}
 
   if(airsellRequest != null){    
     flight = flightResults?.data?.find(flight => flight.id === airsellRequest.flightId);
@@ -387,58 +462,87 @@ const FlightConfirmation = () => {
                       Array.from({ length: flightRequest.adults }, (_, index) => (
                         <form key={index}>
                   <h6>Adult {index + 1}</h6>
-          <Row>
-            <Col md={2} className="form-group">
-              <Label for={`title-${index}`}>Title</Label>
-              <Input type="select" className="form-control" //id={`title-${index}`}
-              id={`adults-title-${index}`}
-              //value={formData[flightRequest.adult][index]?.title || ""}
-              onChange={(e) =>
-                handleChange('adults', index, "title", e.target.value)
-              }
-              onBlur={(e) =>
-                handleChange('adults', index, "title", e.target.value)
-              }
-              >
-                <option value="">Choose...</option>
-                <option value="Mr.">Mr.</option>
-                <option value="Ms.">Ms.</option>
-                <option value="Mrs.">Mrs.</option>
-              </Input>
-            </Col>
-            <Col md={5} className="form-group">
-              <Label for={`first-name-${index}`}>First Name</Label>
-              <Input
-                type="text"
-                className="form-control"               
-                placeholder="Enter first name"
-                id={`adults-first-name-${index}`}            
-              value={formData['adults'][index]?.firstName}
-              onChange={(e) =>
-                handleChange('adults', index, "firstName", e.target.value)
-              }
-              onBlur={(e) =>
-                handleChange('adults', index, "firstName", e.target.value)
-              }
-              />
-            </Col>
-            <Col md={5} className="form-group">
-              <Label for={`last-name-${index}`}>Last Name</Label>
-              <Input
-                type="text"
-                className="form-control"               
-                placeholder="Enter last name"
-                id={`adults-last-name-${index}`}               
-                value={formData['adults'][index]?.lastName}
-                onChange={(e) =>
-                  handleChange('adults', index, "lastName", e.target.value)
-                }
-                onBlur={(e) =>
-                  handleChange('adults', index, "lastName", e.target.value)
-                }
-              />
-            </Col>
-          </Row>
+                  <Row>
+                    <Col md={2} className="form-group">
+                      <Label for={`title-${index}`}>Title</Label>
+                      <Input type="select" className="form-control" //id={`title-${index}`}
+                      id={`adults-title-${index}`}
+                      //value={formData[flightRequest.adult][index]?.title || ""}
+                      onChange={(e) =>
+                        handleChange('adults', index, "title", e.target.value)
+                      }
+                      onBlur={(e) =>
+                        handleChange('adults', index, "title", e.target.value)
+                      }
+                      >
+                        <option value="">Choose...</option>
+                        <option value="Mr.">Mr.</option>
+                        <option value="Ms.">Ms.</option>
+                        <option value="Mrs.">Mrs.</option>
+                      </Input>
+                    </Col>
+                    <Col md={5} className="form-group">
+                      <Label for={`first-name-${index}`}>First Name</Label>
+                      <Input
+                        type="text"
+                        className="form-control"               
+                        placeholder="Enter first name"
+                        id={`adults-first-name-${index}`}            
+                      value={formData['adults'][index]?.firstName}
+                      onChange={(e) =>
+                        handleChange('adults', index, "firstName", e.target.value)
+                      }
+                      onBlur={(e) =>
+                        handleChange('adults', index, "firstName", e.target.value)
+                      }
+                      />
+                    </Col>
+                    <Col md={5} className="form-group">
+                      <Label for={`last-name-${index}`}>Last Name</Label>
+                      <Input
+                        type="text"
+                        className="form-control"               
+                        placeholder="Enter last name"
+                        id={`adults-last-name-${index}`}               
+                        value={formData['adults'][index]?.lastName}
+                        onChange={(e) =>
+                          handleChange('adults', index, "lastName", e.target.value)
+                        }
+                        onBlur={(e) =>
+                          handleChange('adults', index, "lastName", e.target.value)
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  {/** Working For Email And Contaict */}
+                  { 
+                  index === 0 ? (
+                    <form>
+                    <h6>contact details</h6>
+                    <Row>
+                      <Col md={6} className="form-group">
+                        <Label for="inputEmail4">Email</Label>
+                        <Input
+                          type="email"
+                          className="form-control"
+                          id="inputEmail4"
+                          onChange={() => handleEmailChange()} 
+                        />
+                      </Col>
+                      <Col md={6} className="form-group col-md-6">
+                        <Label for="inputnumber">Phone no:</Label>
+                        <Input
+                          type="number"
+                          className="form-control"
+                          id="inputnumber"
+                          onChange={() => handlePhoneChange()} 
+                        />
+                      </Col>
+                    </Row>
+                  </form>
+                  ) : ""
+                  
+                  }
                         </form>
                       ))}  
 
@@ -563,6 +667,7 @@ const FlightConfirmation = () => {
                     type="email"
                     className="form-control"
                     id="inputEmail4"
+                    onChange={() => handleEmailChange()} 
                   />
                 </Col>
                 <Col md={6} className="form-group col-md-6">
@@ -571,6 +676,7 @@ const FlightConfirmation = () => {
                     type="number"
                     className="form-control"
                     id="inputnumber"
+                    onChange={() => handlePhoneChange()} 
                   />
                 </Col>
               </Row>

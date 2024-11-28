@@ -169,7 +169,7 @@ const PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassVal
           <Label check className="mt7 mb4">
             <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('premiumeconomy')}  checked={selectedClassValue === 'premiumeconomy'}/> premium economy
           </Label>
-          <Label check className="mt7 mb4">
+          <Label check className="mt7 mb4" hidden={true}>
             <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('basiceconomy')} checked={selectedClassValue === 'basiceconomy'}/> basic economy
           </Label>                
           <Label check className="mt7 mb4">

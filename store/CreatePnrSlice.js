@@ -1,106 +1,217 @@
-const {createSlice,nanoid} = require("@reduxjs/toolkit");
+const {createSlice} = require("@reduxjs/toolkit");
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useEffect, useState } from "react";
 import React from 'react';
 import axiosInstance from '@/utils/axiosInstance';
 
-export const PNR_multi_request = createAsyncThunk(
-    'flights/PNR_multi_request',
-    async (flightData, { rejectWithValue }) => {
+export const PNR_Multi = createAsyncThunk(
+    'flights/PNR_Muliti',
+    async (multirequest, { rejectWithValue }) => {
       try {
-     debugger;
-        console.log(flightData)
-        const response = await axiosInstance.post('availability', flightData);
-        console.log(response.data)      
+     debugger;        
+        const response = await axiosInstance.post('PNR', multirequest);
+        console.log("Add Multi " + response.data)      
         return response.data; 
       } catch (error) {
         
-        alert(error);
-        alert(error.error);
+        console.log("Error while sending request to pnr multi request" +error);        
         return rejectWithValue(error?.data || 'Server Error');
       }
     }
   );
 
-  export const SubmitSignout = createAsyncThunk(
-    'flights/SubmitSignout',
-    async (singoutRequest, { rejectWithValue }) => {
+  export const Create_Fop = createAsyncThunk(
+    'flights/Create_Fop',
+    async (foprequest, { rejectWithValue }) => {
       try {
      debugger;
-        console.log(singoutRequest)
-        const response = await axios.post('https://flightreservationjays.azurewebsites.net/api/Availability/signout', singoutRequest);
-        console.log(response.data)      
+        console.log(foprequest)
+        const response = await axiosInstance.post('FOP', foprequest);
+        console.log("Fop Response " +response.data)      
         return response.data; 
       } catch (error) {        
-        console.log(error);
-       // return rejectWithValue(error?.data || 'Server Error');
+        console.log("Fop Error : " + error);
+        return rejectWithValue(error?.data || 'Server Error');
+      }
+    }
+  );
+
+  export const Fare_Price_Pnr = createAsyncThunk(
+    'flights/Fare_Price_Pnr',
+    async (farepricerequest, { rejectWithValue }) => {
+      try {
+     debugger;
+        console.log(farepricerequest)
+        const response = await axiosInstance.post('FairPricePnr', farepricerequest);
+        console.log("Fare Price Response " +response.data)      
+        return response.data; 
+      } catch (error) {        
+        console.log("Fare Price Error " + error);
+        return rejectWithValue(error?.data || 'Server Error');
       }
     }
   );
   
-  /*export const fetchAvailability = createAsyncThunk(
-    'availability/fetch', // Action type
-    async (requestData, { rejectWithValue }) => {
+  export const Create_Tst = createAsyncThunk(
+    'flights/Create_Tst',
+    async (createtstrequest, { rejectWithValue }) => {
       try {
-        const response = await axios.post('http://localhost:44433/api/availability', requestData);
-        return response.data; // This becomes the fulfilled payload
-      } catch (error) {
-        return rejectWithValue(error.response?.data || error.message); // Handle errors
+     debugger;
+        console.log(createtstrequest)
+        const response = await axiosInstance.post('FairPricePnr', createtstrequest);
+        console.log("Create TST Response " +response.data)      
+        return response.data; 
+      } catch (error) {        
+        console.log("Create Tst Error " + error);
+        return rejectWithValue(error?.data || 'Server Error');
       }
     }
-  );*/
- 
+  );
+
+  export const Commit_Pnr = createAsyncThunk(
+    'flights/Commit_Pnr',
+    async (commitpnrrequest, { rejectWithValue }) => {
+      try {
+     debugger;
+        console.log(commitpnrrequest)
+        const response = await axiosInstance.post('CommitPnr', commitpnrrequest);
+        console.log("Commit pnr Response " +response.data)      
+        return response.data; 
+      } catch (error) {        
+        console.log("Commit Pnr Error " + error);
+        return rejectWithValue(error?.data || 'Server Error');
+      }
+    }
+  );
+  
 const Slice = createSlice({  
  
     name : 'flights',
     initialState : {     
-      flights: {
-        origin: '',
-        destination: '',
-        departureDate: '',
-        returnDate: '',
-        adults: '',
-        children : '',
-        infant: '',
-        cabinClass: '',
-        flightType: '',       
-      },
-      status: 'idle',
-      error: null,
-      response: null
+      PNR_Multi_Request : null,
+      PNR_Multi_Response : null,
+      PNR_Multi_Status : null,
+      PNR_Multi_Error : null,
+      Create_Fop_Response : null,
+      Create_Fop_Error : null,
+      Create_Fop_Status : null,
+      Fare_Price_Pnr_Response : null,
+      Fare_Price_Pnr_Error : null,
+      Fare_Price_Pnr_Status : null,
+      Create_Tst_Response : null ,
+      Create_Tst_Error : null ,
+      Create_Tst_Status : null ,
+      Commit_Pnr_Response :  null,
+      Commit_Pnr_Error :  null ,
+      Commit_Pnr_Error_Status : ''    
     },
     reducers : {
-        setFlights:(state,action)=> 
+        setPnrMulti:(state,action)=> 
             {              
-              state.flights = { ...state.flights, ...action.payload };              
+              state.PNR_Multi_Request = { ...state.PNR_Multi_Request, ...action.payload };              
            }
       },
       extraReducers: (builder) => {
         builder
-          .addCase(submitFlightData.pending, (state) => {
-            state.status = 'loading';
+          .addCase(PNR_Multi.pending, (state) => {
+            state.PNR_Multi_Status = 'loading';
           })
-          .addCase(submitFlightData.fulfilled, (state, action) => {
+          .addCase(PNR_Multi.fulfilled, (state, action) => {
            debugger;
            if(action.payload.isSuccessful === false){
-            state.status = 'failed';
-            state.response = action.payload.data.error;
-            state.error = action.payload.response;
+            state.PNR_Multi_Status = 'failed';
+            state.PNR_Multi_Error = action.payload.response;
            }
            else{
-            state.status = 'succeeded';
-            state.response = action.payload;
-            state.error = null;
+            state.PNR_Multi_Status = 'succeeded';
+            state.PNR_Multi_Response = action.payload;
+            state.PNR_Multi_Error = null;
            }
             
+          }) .addCase(PNR_Multi.rejected, (state, action) => {
+            state.PNR_Multi_Status = 'failed';
+            state.PNR_Multi_Error = action.payload;
           })
-          .addCase(submitFlightData.rejected, (state, action) => {
-            state.status = 'failed';
-            state.error = action.payload;
-          });
+          .addCase(Create_Fop.pending, (state) => {
+            state.Create_Fop_Status = 'loading';
+          })
+          .addCase(Create_Fop.fulfilled, (state, action) => {
+           debugger;
+           if(action.payload.isSuccessful === false){
+            state.Create_Fop_Status = 'failed';
+            state.Create_Fop_Error = action.payload.response;
+           }
+           else{
+            state.Create_Fop_Status = 'succeeded';
+            state.Create_Fop_Response = action.payload;
+            state.Create_Fop_Error = null;
+           }
+            
+          }).addCase(Create_Fop.rejected, (state, action) => {
+            state.Create_Fop_Status = 'failed';
+            state.Create_Fop_Error = action.payload;
+          })
+          .addCase(Fare_Price_Pnr.pending, (state) => {
+            state.Fare_Price_Pnr_Status = 'loading';
+          })
+          .addCase(Fare_Price_Pnr.fulfilled, (state, action) => {
+           debugger;
+           if(action.payload.isSuccessful === false){
+            state.Fare_Price_Pnr_Status = 'failed';
+            state.Fare_Price_Pnr_Error = action.payload.response;
+           }
+           else{
+            state.Fare_Price_Pnr_Status = 'succeeded';
+            state.Fare_Price_Pnr_Response = action.payload;
+            state.Fare_Price_Pnr_Error = null;
+           }
+            
+          }).addCase(Fare_Price_Pnr.rejected, (state, action) => {
+            state.Fare_Price_Pnr_Status = 'failed';
+            state.Fare_Price_Pnr_Error = action.payload;
+          })
+          .addCase(Create_Tst.pending, (state) => {
+            state.Create_Tst_Status = 'loading';
+          })
+          .addCase(Create_Tst.fulfilled, (state, action) => {
+           debugger;
+           if(action.payload.isSuccessful === false){
+            state.Create_Tst_Status = 'failed';
+            state.Create_Tst_Error = action.payload.response;
+           }
+           else{
+            state.Create_Tst_Status = 'succeeded';
+            state.Create_Tst_Response = action.payload;
+            state.Create_Tst_Error = null;
+           }
+            
+          }).addCase(Create_Tst.rejected, (state, action) => {
+            state.Create_Tst_Status = 'failed';
+            state.Create_Tst_Error = action.payload;
+          })
+          .addCase(Commit_Pnr.pending, (state) => {
+            state.Commit_Pnr_Error_Status = 'loading';
+          })
+          .addCase(Commit_Pnr.fulfilled, (state, action) => {
+           debugger;
+           if(action.payload.isSuccessful === false){
+            state.Commit_Pnr_Error_Status = 'failed';
+            state.Commit_Pnr_Error = action.payload.response;
+           }
+           else{
+            state.Commit_Pnr_Error_Status = 'succeeded';
+            state.Commit_Pnr_Response = action.payload;
+            state.Commit_Pnr_Error = null;
+           }
+            
+          }).addCase(Commit_Pnr.rejected, (state, action) => {
+            state.Commit_Pnr_Error_Status = 'failed';
+            state.Commit_Pnr_Error = action.payload;
+          })
+          ;
       },
     });
 
- export const {setFlights} = Slice.actions;
+ export const {setPnrMulti} = Slice.actions;
  export default Slice.reducer;

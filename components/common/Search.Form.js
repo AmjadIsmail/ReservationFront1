@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { AirLineClass } from "../classes/airlineclass";
 import { useNavigate } from "react-router-dom";
 import { useRouter } from "next/router";
+//import { newDate } from "react-datepicker/dist/date_utils";
 //import { getDate } from "react-datepicker/dist/date_utils";
   const SearchForm = (props) => {
   const [startDate, setStartDate] = useState(new Date());
@@ -49,9 +50,16 @@ import { useRouter } from "next/router";
     setCabin(value);
     setSelectedFlightClass(value); 
   }
-  const handleFlightType = (value) =>{
-    setFlightType(value);
-  }
+  const handleFlightType = (event) => {
+    debugger;
+    if(event.target.checked === true){
+      setFlightType('N')
+    }
+    else {
+      setFlightType('')
+    }
+  };
+ 
   const handleGuestsChange = (counts) => {
     setGuestCounts(counts);
   };
@@ -117,6 +125,20 @@ import { useRouter } from "next/router";
     const start = new Date(startDate);
     const end = new Date(endDate);
     return start > end  ; 
+  };
+
+  const addDays = (date, days) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result.toISOString().split("T")[0];
+  };
+  const handleStartDateChange = (event) => {
+    const newFromDate = event;
+    setStartDate(newFromDate);
+    setEndDate(addDays(newFromDate, 2));
+    setApiResponse('') 
+    console.log(startDate);
+    console.log(endDate);
   };
  function verifydata(){  
    
@@ -330,8 +352,10 @@ try {
               <DatePicker
                 className=" px12 form-control rounded-0"
                 selected={startDate}
-                onChange={(date) => { setStartDate(date); setApiResponse('');}}
-                //onChange={(date) => setStartDate()}
+                //onChange={(date) => { setStartDate(date); setApiResponse('');}}
+                onChange={ handleStartDateChange}
+                minDate={new Date()}
+               
               />
 
               <div className="icon">
@@ -347,6 +371,7 @@ try {
                 selected={endDate}
               //  onChange={(date) => setEndDate(date)}
                 onChange={(date) => { setEndDate(date); setApiResponse('');}}
+                minDate={startDate} 
               />
               <div className="icon">
                 <FontAwesomeIcon icon={faCalendar} />
@@ -376,12 +401,12 @@ try {
             <>
               <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
                 <div className="flightConnecting mtLg10">
-                  <Label check onClick={() => handleFlightType('')}>
+                  <Label check onClick={() => handleFlightType('')} hidden={true}>
                     <Input name="radio1" type="radio" checked={flightType === ''}/>{" "}
                     <span className="ms6">multi-city route</span>
                   </Label>
-                  <Label check onClick={() => handleFlightType('N')}>
-                    <Input name="radio1" type="radio" checked={flightType === 'N'}/>{" "}
+                  <Label check >
+                    <Input onChange={handleFlightType} name="radio1" type="checkbox" checked={flightType === 'N'}/>{" "}
                     <span className="ms6">non stop flights</span>
                   </Label>
                 </div>
