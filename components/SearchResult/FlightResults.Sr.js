@@ -342,7 +342,7 @@ const FlightResultsSr = () => {
                           <div className="airport-part">
                             <div className="airport-name">
                               <h4>{formatDateTime(item?.itineraries[0]?.segments[0]?.departure?.at)}</h4>
-                              <h6>{item?.itineraries[0]?.segments[0]?.departure?.iataCode }</h6>
+                              <h6>{item?.itineraries[0]?.segments[0]?.departure?.iataCode + " - " + item?.itineraries[0]?.segments[0]?.departure?.iataName }</h6>
                             </div>
                             <div className="airport-progress">
                               <i className="fas fa-plane-departure float-start"></i>
@@ -351,7 +351,7 @@ const FlightResultsSr = () => {
                             </div>
                             <div className="airport-name arrival">
                               <h4>{formatDateTime(item?.itineraries[0]?.segments[0]?.arrival?.at)}</h4>
-                              <h6>{item?.itineraries[0]?.segments[0]?.arrival?.iataCode }</h6>
+                              <h6>{item?.itineraries[0]?.segments[0]?.arrival?.iataCode + " - " + item?.itineraries[0]?.segments[0]?.arrival?.iataName}</h6>
                             </div>
                           </div>
                           </Col>
@@ -372,7 +372,7 @@ const FlightResultsSr = () => {
                            <div className="airport-part">
                              <div className="airport-name">
                                <h4>{formatDateTime(item?.itineraries[0]?.segments[1]?.departure?.at)}</h4>
-                               <h6>{item?.itineraries[0]?.segments[1]?.departure?.iataCode }</h6>
+                               <h6>{item?.itineraries[0]?.segments[1]?.departure?.iataCode + " - " + item?.itineraries[0]?.segments[1]?.departure?.iataName }</h6>
                              </div>
                              <div className="airport-progress">
                                <i className="fas fa-plane-departure float-start"></i>
@@ -381,7 +381,7 @@ const FlightResultsSr = () => {
                              </div>
                              <div className="airport-name arrival">
                                <h4>{formatDateTime(item?.itineraries[0]?.segments[1]?.arrival?.at)}</h4>
-                               <h6>{item?.itineraries[0]?.segments[1]?.arrival?.iataCode }</h6>
+                               <h6>{item?.itineraries[0]?.segments[1]?.arrival?.iataCode + " - " + item?.itineraries[0]?.segments[1]?.arrival?.iataName}</h6>
                              </div>
                            </div>
                          </Col>
@@ -405,7 +405,7 @@ const FlightResultsSr = () => {
                            <div className="airport-part">
                              <div className="airport-name">
                                <h4>{formatDateTime(item?.itineraries[0]?.segments[2]?.departure?.at)}</h4>
-                               <h6>{item?.itineraries[0]?.segments[2]?.departure?.iataCode }</h6>
+                               <h6>{item?.itineraries[0]?.segments[2]?.departure?.iataCode + " - " + item?.itineraries[0]?.segments[2]?.departure?.iataName }</h6>
                              </div>
                              <div className="airport-progress">
                                <i className="fas fa-plane-departure float-start"></i>

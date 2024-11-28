@@ -164,19 +164,19 @@ const PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassVal
        
        <div className="flightClass">
         <Label check className="mt7 mb4">
-            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('economy')}  checked={selectedClassValue === 'economy'} /> economy
+            <Input name="flightClass" type="radio" className="me10"  onClick={() => { handleCabin('economy'); handleshowparent(); }}  checked={selectedClassValue === 'economy'} /> economy
           </Label>  
           <Label check className="mt7 mb4">
-            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('premiumeconomy')}  checked={selectedClassValue === 'premiumeconomy'}/> premium economy
+            <Input name="flightClass" type="radio" className="me10" onClick={() => {handleCabin('premiumeconomy'); handleshowparent();}}  checked={selectedClassValue === 'premiumeconomy'}/> premium economy
           </Label>
           <Label check className="mt7 mb4" hidden={true}>
-            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('basiceconomy')} checked={selectedClassValue === 'basiceconomy'}/> basic economy
+            <Input name="flightClass" type="radio" className="me10" onClick={() => {handleCabin('basiceconomy'); handleshowparent();}} checked={selectedClassValue === 'basiceconomy'}/> basic economy
           </Label>                
           <Label check className="mt7 mb4">
-            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('business')} checked={selectedClassValue === 'business'}/> business
+            <Input name="flightClass" type="radio" className="me10" onClick={() => {handleCabin('business'); handleshowparent();}} checked={selectedClassValue === 'business'}/> business
           </Label>          
           <Label check className="mt7 mb4">
-            <Input name="flightClass" type="radio" className="me10" onClick={() => handleCabin('first')} checked={selectedClassValue === 'first'}/> first
+            <Input name="flightClass" type="radio" className="me10" onClick={() => {handleCabin('first'); handleshowparent();}} checked={selectedClassValue === 'first'}/> first
           </Label>
         </div>
 

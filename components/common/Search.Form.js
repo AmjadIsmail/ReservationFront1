@@ -51,7 +51,7 @@ import { useRouter } from "next/router";
     setSelectedFlightClass(value); 
   }
   const handleFlightType = (event) => {
-    debugger;
+    
     if(event.target.checked === true){
       setFlightType('N')
     }
@@ -109,10 +109,14 @@ import { useRouter } from "next/router";
     return match ? match[1] : null; 
   }
   const getFormattedDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const day = String(date.getDate()).padStart(2, '0');  
-    return `${year}-${month}-${day}`;
+    debugger;
+    if(date != null){
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+      const day = String(date.getDate()).padStart(2, '0');  
+      return `${year}-${month}-${day}`;
+    }
+    
   };
 
   const isToday = (date) => {
@@ -130,12 +134,12 @@ import { useRouter } from "next/router";
   const addDays = (date, days) => {
     const result = new Date(date);
     result.setDate(result.getDate() + days);
-    return result.toISOString().split("T")[0];
+    return result;//.toISOString().split("T")[0];
   };
   const handleStartDateChange = (event) => {
     const newFromDate = event;
     setStartDate(newFromDate);
-    setEndDate(addDays(newFromDate, 2));
+    setEndDate(addDays(newFromDate, 7));
     setApiResponse('') 
     console.log(startDate);
     console.log(endDate);
@@ -369,8 +373,7 @@ try {
               <DatePicker
                 className=" px12 form-control rounded-0"
                 selected={endDate}
-              //  onChange={(date) => setEndDate(date)}
-                onChange={(date) => { setEndDate(date); setApiResponse('');}}
+                onChange={(date) => { debugger; setEndDate(date); setApiResponse('');}}
                 minDate={startDate} 
               />
               <div className="icon">

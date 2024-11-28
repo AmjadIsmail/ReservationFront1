@@ -62,14 +62,31 @@ const FlightConfirmation = () => {
   });
 
   const handleEmailChange = (e) => {
+  
+    //setEmail(e.target.value);
+    if (!e || !e.target) {
+      console.error("Event object is null or undefined!");
+      return;
+    }
+    console.log("Event target value:", e.target.value); // Debugging line
     setEmail(e.target.value);
   };
 
   const handlePhoneChange = (e) => {
+    if (!e || !e.target) {
+      console.error("Event object is null or undefined!");
+      return;
+    }
     setPhone(e.target.value);
   };
-  function CreatePnrMultiRequest(formData){
 
+  const DispatchData=()=>{
+
+  let request = CreatePnrMultiRequest(formData);
+
+  }
+  function CreatePnrMultiRequest(formData){
+debugger;
     const storedSession = localStorage.getItem("session");
     if (storedSession) {
       const jsonObject = JSON.parse(storedSession);
@@ -79,6 +96,7 @@ const FlightConfirmation = () => {
         sequenceNumber : jsonObject.sequenceNumber,
         securityToken: jsonObject.securityToken
       }
+    
       const passengers  =[];
       formData.adults.forEach((adult, index) => {
         if(index == 0){
@@ -132,9 +150,30 @@ const FlightConfirmation = () => {
         sessionDetails : session,
         passengerDetails: passengers,
       };
+      return request;
       
   }}
 
+  function CreateFopRequest(){
+    const storedSession = localStorage.getItem("session");
+    if (storedSession) {
+      const jsonObject = JSON.parse(storedSession);
+      const session = {
+        transactionStatusCode: jsonObject.transactionStatusCode,
+        sessionId: jsonObject.sessionId,
+        sequenceNumber : jsonObject.sequenceNumber,
+        securityToken: jsonObject.securityToken
+      }
+
+      const request = {
+        sessionDetails : session,
+        transactionDetailsCode: "FP",
+        fopCode : "CASH"
+      };
+      return request;
+    
+    }
+  }
   if(airsellRequest != null){    
     flight = flightResults?.data?.find(flight => flight.id === airsellRequest.flightId);
   }
@@ -526,7 +565,8 @@ const FlightConfirmation = () => {
                           type="email"
                           className="form-control"
                           id="inputEmail4"
-                          onChange={() => handleEmailChange()} 
+                          //onChange={() => handleEmailChange()} 
+                          onChange={handleEmailChange}
                         />
                       </Col>
                       <Col md={6} className="form-group col-md-6">
@@ -535,7 +575,7 @@ const FlightConfirmation = () => {
                           type="number"
                           className="form-control"
                           id="inputnumber"
-                          onChange={() => handlePhoneChange()} 
+                          onChange={handlePhoneChange}
                         />
                       </Col>
                     </Row>
@@ -896,7 +936,7 @@ const FlightConfirmation = () => {
           </Row>
           <div className="continue-btn">
             <button
-              onclick="window.location.href='flight-booking-addons.html'"
+              onClick={DispatchData}
               className="btn btn-solid"
               type="submit"
             >
