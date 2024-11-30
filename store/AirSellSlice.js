@@ -12,7 +12,7 @@ export const submitairSellRequest = createAsyncThunk(
     'flights/submitairSellRequest',
     async (flightData, { rejectWithValue }) => {
       try {
-      debugger;
+      
         console.log(flightData)
         const response = await axiosInstance.post('AirSellFRC', flightData);
         console.log(response.data)      
@@ -68,7 +68,7 @@ const airSellSlice = createSlice({
     reducers : {
         setAirSell:(state,action)=> 
             {     
-              debugger         
+                     
               state.airSellRequest = { ...state.airSellRequest, ...action.payload };              
            }
       },
@@ -78,7 +78,7 @@ const airSellSlice = createSlice({
             state.status = 'loading';
           })
           .addCase(submitairSellRequest.fulfilled, (state, action) => {
-           debugger;
+           
            if(action.payload.isSuccessful === false){
             state.status = 'failed';
             state.response = action.payload.data.error;

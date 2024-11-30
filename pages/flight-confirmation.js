@@ -7,17 +7,18 @@ import { useRouter } from "next/router";
 import {useDispatch, useSelector} from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Input, Label, Row } from "reactstrap";
-import { PNR_Multi,Create_Fop,Fare_Price_Pnr,Create_Tst,Commit_Pnr } from "@/store/CreatePnrSlice";
+import { setPassengerDetails,setPnrMulti,PNR_Multi,Create_Fop,Fare_Price_Pnr,Create_Tst,Commit_Pnr } from "@/store/CreatePnrSlice";
 
 const formatDateToCustomFormat = (dateString) => {
-  const date = new Date(dateString); 
- 
-  const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
-
-  return new Intl.DateTimeFormat('en-US', options)
-    .format(date)
-    .toUpperCase()
-    .replace(',', ''); 
+  if(dateString != null){
+    const date = new Date(dateString);  
+    const options = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };  
+    return new Intl.DateTimeFormat('en-US', options)
+      .format(date)
+      .toUpperCase()
+      .replace(',', ''); 
+  }
+  
 };
 
 let flight;
@@ -41,8 +42,17 @@ const FlightConfirmation = () => {
   const flightRequest = useSelector((state) => state.flights.flights);
   const airsellResults = useSelector((state) => state.airsell.response);
   const airsellRequest = useSelector((state) => state.airsell.airSellRequest);
+  const PNR_Multi_Error = useSelector((state) => state.generatePnr.PNR_Multi_Error);
+  const Create_Fop_Error =  useSelector((state) => state.generatePnr.Create_Fop_Error);
+  const Fare_Price_Pnr_Error =  useSelector((state) => state.generatePnr.Fare_Price_Pnr_Error);
+  const Create_Tst_Error =  useSelector((state) => state.generatePnr.Create_Tst_Error);
+  const Commit_Pnr_Error =  useSelector((state) => state.generatePnr.Commit_Pnr_Error);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [email,setEmail] = useState('');
   const [phone,setPhone] = useState('');
+  const [ApiResponse,setApiResponse] = useState('');
+
   const [formData, setFormData] = useState({
     adults: Array.from({ length: flightRequest.adults }, () => ({
       firstName: "",
@@ -63,8 +73,7 @@ const FlightConfirmation = () => {
 
   const handleEmailChange = (e) => {
   
-    //setEmail(e.target.value);
-    if (!e || !e.target) {
+   if (!e || !e.target) {
       console.error("Event object is null or undefined!");
       return;
     }
@@ -80,13 +89,284 @@ const FlightConfirmation = () => {
     setPhone(e.target.value);
   };
 
+  const handleApiCalls = async () => {
+    setLoading(true);
+    setError(null);
+    debugger;
+    let session = getSession();
+    session.sequenceNumber = session.sequenceNumber + 1;
+    const pnrMultirequest = CreatePnrMultiRequest(formData,session);
+    try{
+      dispatch(setPassengerDetails(pnrMultirequest.passengerDetails));
+     }catch(error){
+       console.error('Error calling setPassengerDetails:', error.message);
+     }
+    const addPnrMultiRequset = {
+      sessionDetails : pnrMultirequest.sessionDetails,
+      passengerDetails : pnrMultirequest.passengerDetails
+    }  
+    let session2 = getSession();
+    session2.sequenceNumber = session2.sequenceNumber + 2;
+    const fopRequest = CreateFopRequest(session2);
+    const FopRequest = {
+      sessionDetails : fopRequest.sessionDetails,
+      transactionDetailsCode : fopRequest.transactionDetailsCode,
+      fopCode : fopRequest.fopCode
+    }
+  
+    let session3 = getSession();
+    session3.sequenceNumber = session3.sequenceNumber + 3;
+    const carrierCode = airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.marketingCompany;
+    const farePriceRequest = CreateFarePricePnrRequest(carrierCode,session3);
+    const pricePnrRequest = {
+      sessionDetails : farePriceRequest.sessionDetails,
+      pricingOptionKey : farePriceRequest.pricingOptionKey,
+      carrierCode : carrierCode
+    }
+    let session4 = getSession();
+    session4.sequenceNumber = session4.sequenceNumber + 4;
+    const tstRequest = CreateTstRequest(session4);
+   const ticketTstRequest = {
+    sessionDetails : tstRequest.sessionDetails,
+    adults : tstRequest.adults,
+    children : tstRequest.children,
+    infants : tstRequest.infants
+   }
+   let session5 = getSession();
+   session5.sequenceNumber = session5.sequenceNumber + 5;
+   const commitPnrRequest = CreateCommitPnrRequest(session5); 
+  
+   const pnrCommitRequest = {
+     sessionDetails : commitPnrRequest.sessionDetails,
+     optionCode1 : commitPnrRequest.optionCode1,
+     optionCode2 : commitPnrRequest.optionCode2,
+   }  
+  
+    try {
+      // Dispatch first API call
+      await dispatch(PNR_Multi(addPnrMultiRequset));
+      console.log('PNR_Multi dispatched successfully.');
+      if(PNR_Multi_Error != null){
+        setApiResponse(PNR_Multi_Error); return;
+      }
+      // Dispatch second API call
+      await dispatch(Create_Fop(FopRequest));
+      console.log('Create_Fop dispatched successfully.');
+      if(Create_Fop_Error != null){
+        setApiResponse(Create_Fop_Error); return;
+      }
+      // Dispatch third API call
+      await dispatch(Fare_Price_Pnr(pricePnrRequest));
+      console.log('Fare_Price_Pnr dispatched successfully.');
+      if(Fare_Price_Pnr_Error != null){
+        setApiResponse(Fare_Price_Pnr_Error); return;
+      }
+
+      // Dispatch fourth API call
+      await dispatch(Create_Tst(ticketTstRequest));
+      console.log('Create_Tst dispatched successfully.');
+      if(Create_Tst_Error != null){
+        setApiResponse(Create_Tst_Error); return;
+      }
+      // Dispatch fifth API call
+      await dispatch(Commit_Pnr(pnrCommitRequest));
+      console.log('Commit_Pnr dispatched successfully.');
+      if(Commit_Pnr_Error != null){
+        setApiResponse(Commit_Pnr_Error); return;
+      }
+      router.push("/confirmation");
+      //alert('All API calls were successful!');
+    } catch (err) {
+      console.error('An error occurred:', err);
+      setError('An error occurred while processing the requests.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   const DispatchData=()=>{
 
-  let request = CreatePnrMultiRequest(formData);
-
+  let session = getSession();
+  session.sequenceNumber = session.sequenceNumber + 1;
+  const pnrMultirequest = CreatePnrMultiRequest(formData,session);
+  try{
+    dispatch(setPassengerDetails(pnrMultirequest.passengerDetails));
+   }catch(error){
+     console.error('Error calling setPassengerDetails:', error.message);
+   }
+  const addPnrMultiRequset = {
+    sessionDetails : pnrMultirequest.sessionDetails,
+    passengerDetails : pnrMultirequest.passengerDetails
+  }  
+  let session2 = getSession();
+  session2.sequenceNumber = session2.sequenceNumber + 2;
+  const fopRequest = CreateFopRequest(session2);
+  const FopRequest = {
+    sessionDetails : fopRequest.sessionDetails,
+    transactionDetailsCode : fopRequest.transactionDetailsCode,
+    fopCode : fopRequest.fopCode
   }
-  function CreatePnrMultiRequest(formData){
-debugger;
+
+  let session3 = getSession();
+  session3.sequenceNumber = session3.sequenceNumber + 3;
+  const carrierCode = airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.marketingCompany;
+  const farePriceRequest = CreateFarePricePnrRequest(carrierCode,session3);
+  const pricePnrRequest = {
+    sessionDetails : farePriceRequest.sessionDetails,
+    pricingOptionKey : farePriceRequest.pricingOptionKey,
+    carrierCode : carrierCode
+  }
+  let session4 = getSession();
+  session3.sequenceNumber = session3.sequenceNumber + 4;
+  const tstRequest = CreateTstRequest(session4);
+ const ticketTstRequest = {
+  sessionDetails : tstRequest.sessionDetails,
+  adults : tstRequest.adults,
+  children : tstRequest.children,
+  infants : tstRequest.infants
+ }
+ let session5 = getSession();
+ session3.sequenceNumber = session3.sequenceNumber + 5;
+ const commitPnrRequest = CreateCommitPnrRequest(session5); 
+
+ const pnrCommitRequest = {
+   sessionDetails : commitPnrRequest.sessionDetails,
+   optionCode1 : commitPnrRequest.optionCode1,
+   optionCode2 : commitPnrRequest.optionCode2,
+ }  
+
+                /** Sending Pnr Multi Request */
+  try {  
+    dispatch(setPnrMulti(pnrMultirequest));    
+   } catch (error) { console.error('Error calling setPnrMulti:', error.message); }
+
+  let isProcess = false;
+ // try {
+    
+  //   dispatch(PNR_Multi(addPnrMultiRequset)).unwrap().then(()=>{
+  //  console.log("Pnr Multi Called Successfully");  
+  
+  //   })  
+    /*
+    dispatch(PNR_Multi(addPnrMultiRequset))
+  .unwrap()
+  .then(() => {
+    debugger;
+    console.log("PNR Multi API call completed");
+    FopRequest.sessionDetails.sequenceNumber = FopRequest.sessionDetails.sequenceNumber + 1;
+    return dispatch(Create_Fop(FopRequest)).unwrap().then(()=>{
+      debugger;
+      console.log("Create_Fop API call completed");
+      pricePnrRequest.sessionDetails.sequenceNumber = pricePnrRequest.sessionDetails.sequenceNumber + 1;
+      dispatch(Fare_Price_Pnr(pricePnrRequest)).unwrap().then(()=>{
+        debugger;
+        console.log("Fare Price Called Successfully");  
+        ticketTstRequest.sessionDetails.sequenceNumber = ticketTstRequest.sessionDetails.sequenceNumber + 1;
+        dispatch(Create_Tst(ticketTstRequest)).unwrap().then(()=>{
+          debugger;
+          console.log("Tst Requset Called Successfully");  
+          pnrCommitRequest.sessionDetails.sequenceNumber = pnrCommitRequest.sessionDetails.sequenceNumber + 1;
+          dispatch(Commit_Pnr(pnrCommitRequest)).unwrap().then(()=>{
+            console.log("Commit pnr Requset Called Successfully");  
+            isProcess = true;
+             })   
+
+           })
+
+         })    
+    })
+  })
+  .then(() => {
+    console.log("FOP API call completed successfully");
+  })
+  .catch((error) => {
+    console.error("Error occurred:", error);
+  });
+   } catch (error) {
+     console.log('Error api PNR multi call:', error.message);   
+     setApiResponse('Error in calling Pnr Multi ' + error)
+     isProcess = false;
+   }
+
+
+   */
+  //  debugger;
+  
+  
+   
+
+ /** Sending Pnr Create FOP */
+  // if(isProcess){
+  //   try {
+  //     debugger; 
+  //     dispatch(Create_Fop(FopRequest)).unwrap().then(()=>{
+  //    console.log("FOP Called Successfully");  
+  //    isProcess = true;
+  //     })    
+  //    } catch (error) {
+  //      console.log('Error FOP api call:', error.message);   
+  //      setApiResponse('Error in calling FOP ' + error)
+  //      isProcess = false;
+  //    }
+  //  }
+  //  debugger;
+ 
+
+ /** Sending Fare Price Request */
+
+
+//  if(isProcess){
+//   try {
+//     debugger; 
+//     dispatch(Fare_Price_Pnr(pricePnrRequest)).unwrap().then(()=>{
+//    console.log("Fare Price Called Successfully");  
+//    isProcess = true;
+//     })    
+//    } catch (error) {
+//      console.log('Error Fare PRice api call:', error.message);   
+//      setApiResponse('Error in calling FOP ' + error)
+//      isProcess = false;
+//    }
+//  }
+//  debugger;
+
+   /** Sending TST Request */
+  //  if(isProcess){
+  //   try {
+  //     debugger; 
+  //     dispatch(Create_Tst(ticketTstRequest)).unwrap().then(()=>{
+  //    console.log("Tst Requset Called Successfully");  
+  //    isProcess = true;
+  //     })    
+  //    } catch (error) {
+  //      console.log('Tst Requset PRice api call:', error.message);   
+  //      setApiResponse('Error in calling Tst Requset ' + error)
+  //      isProcess = false;
+  //    }
+  //  }
+  //  debugger;
+  
+
+  //  if(isProcess){
+  //   try {
+  //     debugger; 
+  //     dispatch(Commit_Pnr(pnrCommitRequest)).unwrap().then(()=>{
+  //    console.log("Commit pnr Requset Called Successfully");  
+  //    isProcess = true;
+  //     })    
+  //    } catch (error) {
+  //      console.log('Commit Pnr Requset api call:', error.message);   
+  //      setApiResponse('Error in calling commit pnr Requset ' + error)
+  //      isProcess = false;
+  //    }
+  //  }
+    if(isProcess){
+      router.push("/confirmation");
+    }
+  }
+
+  function getSession(){
     const storedSession = localStorage.getItem("session");
     if (storedSession) {
       const jsonObject = JSON.parse(storedSession);
@@ -96,7 +376,11 @@ debugger;
         sequenceNumber : jsonObject.sequenceNumber,
         securityToken: jsonObject.securityToken
       }
-    
+      return session;         
+    }
+  }
+  function CreatePnrMultiRequest(formData,session){
+ 
       const passengers  =[];
       formData.adults.forEach((adult, index) => {
         if(index == 0){
@@ -146,33 +430,53 @@ debugger;
         });
       });
 
-      const request = {
+      const pnrmultirequest = {
         sessionDetails : session,
         passengerDetails: passengers,
       };
-      return request;
+      return pnrmultirequest;
       
-  }}
+  }
 
-  function CreateFopRequest(){
-    const storedSession = localStorage.getItem("session");
-    if (storedSession) {
-      const jsonObject = JSON.parse(storedSession);
-      const session = {
-        transactionStatusCode: jsonObject.transactionStatusCode,
-        sessionId: jsonObject.sessionId,
-        sequenceNumber : jsonObject.sequenceNumber,
-        securityToken: jsonObject.securityToken
-      }
-
-      const request = {
+  function CreateFopRequest(session){
+   
+      const foprequest = {
         sessionDetails : session,
         transactionDetailsCode: "FP",
         fopCode : "CASH"
       };
-      return request;
-    
-    }
+      return foprequest;
+  }
+
+  function CreateFarePricePnrRequest(_carrierCode,session){
+    //let session = getSession();
+    const farepricerequest = {
+      sessionDetails : session,
+      pricingOptionKey: "RP,RU",
+      carrierCode : _carrierCode
+    };
+    return farepricerequest;
+  }
+
+  function CreateTstRequest(session){
+    //let session = getSession();
+    const createtstrequest = {
+      sessionDetails : session,
+      adults: flightRequest.adults,
+      children : flightRequest.children,
+      infants : flightRequest.infant,
+    };
+    return createtstrequest;
+  }
+ 
+  function CreateCommitPnrRequest(session){
+   // let session = getSession();
+    const createcommitpnr = {
+      sessionDetails : session,
+      optionCode1: "10",
+      optionCode2 : "30",
+    };
+    return createcommitpnr;
   }
   if(airsellRequest != null){    
     flight = flightResults?.data?.find(flight => flight.id === airsellRequest.flightId);
@@ -238,7 +542,7 @@ debugger;
                       <Col md={3}>
                         <div className="duration">
                           <div>
-                            <h6> {convertTimeFormat(flight.itineraries[0].duration)}</h6>
+                            <h6> {convertTimeFormat(flight?.itineraries[0]?.duration)}</h6>
                             <p>{flight?.itineraries?.[0]?.segments?.length - 1 || 0} stop</p>
                           </div>
                         </div>
@@ -357,7 +661,7 @@ debugger;
                       <Col md={3}>
                         <div className="duration">
                           <div>
-                            <h6> {convertTimeFormat(flight.itineraries[1].duration)}</h6>
+                            <h6> {convertTimeFormat(flight?.itineraries[1]?.duration)}</h6>
                             <p>{flight?.itineraries?.[1]?.segments?.length -1 || 0} stop</p>
                           </div>
                         </div>
@@ -698,7 +1002,7 @@ debugger;
           </Row>
                         </form>
                       ))}                 
-            <form>
+            <form hidden={true}>
               <h6>contact details</h6>
               <Row>
                 <Col md={6} className="form-group">
@@ -735,7 +1039,7 @@ debugger;
                         <div className="boxes">
                           <h6>
                             secure your travel with travel insurance for
-                            $25/person
+                            {currSign}25/person
                           </h6>
                           <div className="form-check">
                             <Input
@@ -744,7 +1048,7 @@ debugger;
                               name="exampleRadios1"
                               id="exampleRadios1"
                               value="option1"
-                              checked
+                              
                             />
                             <Label
                               className="form-check-label"
@@ -760,6 +1064,7 @@ debugger;
                               name="exampleRadios1"
                               id="exampleRadios2"
                               value="option2"
+                              checked
                             />
                             <Label
                               className="form-check-label"
@@ -788,24 +1093,24 @@ debugger;
                         <table className="table table-borderless">
                           <tbody>
                             <tr>
-                              <td>adults ({flightRequest.adults} X {currSign}{flight.price.adultPP})                              
+                              <td>adults ({flightRequest?.adults} X {currSign}{flight?.price?.adultPP})                              
                               </td>
-                              <td>{currSign}{flightRequest.adults * flight.price.adultPP}</td>
+                              <td>{currSign}{flightRequest?.adults * flight?.price?.adultPP}</td>
                             </tr>
-                            {(flightRequest.children != 0 ?                              
+                            {(flightRequest?.children != 0 ?                              
                               <tr>
                               <td>
-                             children ({flightRequest.children} X {currSign}{flight.price.childPp})                             
+                             children ({flightRequest?.children} X {currSign}{flight?.price?.childPp})                             
                               </td>
-                              <td>{currSign}{flightRequest.children * flight.price.childPp}</td>
+                              <td>{currSign}{flightRequest?.children * flight?.price?.childPp}</td>
                             </tr>
                               : "")}     
-                                {(flightRequest.infant != 0 ?                              
+                                {(flightRequest?.infant != 0 ?                              
                               <tr>
                               <td>
-                              infants({flightRequest.infant} X {currSign}{flight.price.infantPp})                             
+                              infants({flightRequest?.infant} X {currSign}{flight?.price?.infantPp})                             
                               </td>
-                              <td>{currSign}{flightRequest.infant * flight.price.infantPp}</td>
+                              <td>{currSign}{flightRequest?.infant * flight?.price?.infantPp}</td>
                             </tr>
                               : "")}                            
                             <tr>
@@ -936,12 +1241,13 @@ debugger;
           </Row>
           <div className="continue-btn">
             <button
-              onClick={DispatchData}
+               onClick={handleApiCalls} disabled={loading}
               className="btn btn-solid"
               type="submit"
             >
               continue booking
             </button>
+            <span>{ApiResponse}</span>
           </div>
         </Container>
       </div>

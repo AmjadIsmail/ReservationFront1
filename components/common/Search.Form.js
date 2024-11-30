@@ -36,7 +36,7 @@ import { useRouter } from "next/router";
   const [cabin,setCabin] = useState('economy');
   const [flightType , setFlightType] = useState('');
   const [selectedFlightClass, setSelectedFlightClass] = useState('economy');
-  const [apiResponse,setApiResponse] = useState('ready for hit');
+  const [apiResponse,setApiResponse] = useState('');
   const dispatch = useDispatch();
  const router = useRouter();
   const flights = useSelector((state) => state.flights.flights);
@@ -109,7 +109,7 @@ import { useRouter } from "next/router";
     return match ? match[1] : null; 
   }
   const getFormattedDate = (date) => {
-    debugger;
+    
     if(date != null){
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
@@ -222,18 +222,19 @@ try {
   dispatch(setFlights(flightData));
   
  } catch (error) {
+  setApiResponse(error);
    console.error('Error calling setFlights:', error.message);
    
  }
 try {
-  //debugger; 
+
   dispatch(submitFlightData(flightData)).unwrap().then(()=>{
    router.push("/search-result");
  
   })
   
  } catch (error) {
-   console.error('Error api call data:', error.message);
+   console.log('Error api call data:', error.message);
    alert(error);
    setApiResponse('Error while search ' + error)
  }
@@ -373,7 +374,7 @@ try {
               <DatePicker
                 className=" px12 form-control rounded-0"
                 selected={endDate}
-                onChange={(date) => { debugger; setEndDate(date); setApiResponse('');}}
+                onChange={(date) => { setEndDate(date); setApiResponse('');}}
                 minDate={startDate} 
               />
               <div className="icon">
@@ -433,8 +434,7 @@ try {
         <div className="responsive-close">
           <Button color="transparent" className="p-0" onClick={props.closeBtn}>
             <FontAwesomeIcon icon={faTimesCircle} />           
-          </Button>
-         
+          </Button>        
         </div>
         
       </form>

@@ -3,9 +3,53 @@ import logo from "@/public/images/logo.png";
 import bookingSuccess from "@/public/images/booking-success.jpg";
 import Link from "next/link";
 import Meta from "@/components/common/Meta";
+import {useDispatch, useSelector} from 'react-redux';
+import { useRouter } from "next/router";
+
 
 const Confirmation = () => {
-  return (
+  const currSign = '£';
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const flightResults = useSelector((state) => state.flights.response);
+  const flightRequest = useSelector((state) => state.flights.flights);
+  debugger;
+  const airsellResults = useSelector((state) => state.airsell.response);
+  const airsellRequest = useSelector((state) => state.airsell.airSellRequest);
+  const pnrResponse = useSelector((state) => state.generatePnr.CommitPnrResponse);
+  const PNR_Number = useSelector((state) => state.generatePnr.PNR_Number);
+  const selectedFlight = useSelector((state)=> state.flights.selectedFlight);
+ const PassengerDetails = useSelector((state)=> state.generatePnr.PassengerDetails);
+ const Commit_Pnr_Error = useSelector((state)=> state.generatePnr.Commit_Pnr_Error);
+ console.log("passengerDetails: " + PassengerDetails);
+  const formatDate = (dateString) => {
+    try{
+      const date = new Date(dateString); 
+      return new Intl.DateTimeFormat('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }).format(date);
+    }catch(error) {
+      console.log('Error calling formatDate:', error.message);      
+    }
+  };
+
+  function calculateDaysDifference(date1, date2) {
+    try{
+      const d1 = new Date(date1);
+      const d2 = new Date(date2);
+      const timeDifference = d2 - d1;
+      const dayDifference = timeDifference / (1000 * 60 * 60 * 24);    
+      return dayDifference;
+    }catch(error) {
+      console.log('Error calling calculateDaysDifference:', error.message);      
+    }
+   
+}
+
+
+  return ( 
     <>
       <Meta title="Confirmation" />
       <div style={{ margin: "80px 0" }}>
@@ -137,7 +181,7 @@ const Confirmation = () => {
                       "calc(18px + (22 - 18) * ((100vw - 320px) / (1920 - 320)))",
                   }}
                 >
-                  Payment Successful ! Get Ready For Unforgettable Trip.
+                {Commit_Pnr_Error == null ? "Booking Successful ! Get Ready For Unforgettable Trip." : "Unable to create booking there is some thing went wrong please contact us at ....."}  
                 </h2>
                 <h3
                   style={{
@@ -194,7 +238,7 @@ const Confirmation = () => {
                               <td
                                 style={{ fontWeight: "600", color: "#3c3c3c" }}
                               >
-                                54115
+                                {PNR_Number} {/*pnrResponse.data?.data?.pnrHeader?.reservation?.pnr*/}
                               </td>
                             </tr>
                             <tr>
@@ -202,7 +246,7 @@ const Confirmation = () => {
                               <td
                                 style={{ fontWeight: "600", color: "#3c3c3c" }}
                               >
-                                Confirmed
+                               {Commit_Pnr_Error == null ? "Confirmed" : "Failed"}
                               </td>
                             </tr>
                             <tr>
@@ -210,7 +254,18 @@ const Confirmation = () => {
                               <td
                                 style={{ fontWeight: "600", color: "#3c3c3c" }}
                               >
-                                2 Adults, 1 Delux Room
+                              { flightRequest.adults} Adults,
+                              { flightRequest?.children} Children ,
+                              { flightRequest?.infant} Infant
+                                {/* {(
+                                  flightRequest?.children !== 0 ) && (
+                                  Children (flightRequest?.children)
+                                )}
+                                {(flightRequest?.infant !== 0 ) && (
+                                  Infant (flightRequest?.infant)
+                                )
+                                
+                                } */}
                               </td>
                             </tr>
                           </tbody>
@@ -243,7 +298,7 @@ const Confirmation = () => {
                               <td
                                 style={{ fontWeight: "600", color: "#3c3c3c" }}
                               >
-                                Splendid Spain
+                                {selectedFlight?.itineraries[0]?.airport_city} To {selectedFlight?.itineraries[1]?.airport_city }
                               </td>
                             </tr>
                             <tr>
@@ -251,7 +306,7 @@ const Confirmation = () => {
                               <td
                                 style={{ fontWeight: "600", color: "#3c3c3c" }}
                               >
-                                9-15 Nov 2019
+                            {formatDate(flightRequest?.departureDate)} - {formatDate(flightRequest?.returnDate)}
                               </td>
                             </tr>
                             <tr>
@@ -259,7 +314,7 @@ const Confirmation = () => {
                               <td
                                 style={{ fontWeight: "600", color: "#3c3c3c" }}
                               >
-                                6 Days/ 7 Nights
+                               {calculateDaysDifference(flightRequest?.departureDate,flightRequest?.returnDate)} Days.
                               </td>
                             </tr>
                           </tbody>
@@ -279,87 +334,167 @@ const Confirmation = () => {
                     marginBottom: "10px",
                     marginTop: "30px",
                   }}
+                  hidden={true}
                 >
                   Your Details
                 </h5>
               </td>
             </tr>
-            <tr style={{ color: "#616161" }}>
-              <td style={{ padding: "0 24px 50px" }}>
-                <h6
-                  style={{
-                    margin: "0",
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    lineHeight: "28px",
-                    color: "#3c3c3c",
-                  }}
-                >
-                  Name:
-                  <span style={{ fontWeight: "500" }}>Mark Jecno</span>
-                </h6>
-                <h6
-                  style={{
-                    margin: "0",
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    lineHeight: "28px",
-                    color: "#3c3c3c",
-                  }}
-                >
-                  Address:{" "}
-                  <span style={{ fontWeight: "500" }}>
-                    1189 Half and Half Drive
-                  </span>
-                </h6>
-                <h6
-                  style={{
-                    margin: "0",
-                    fontSize: "16px",
-                    fontWeight: "500",
-                    lineHeight: "28px",
-                  }}
-                >
-                  Fresno, California, 93721
-                </h6>
-                <h6
-                  style={{
-                    margin: "0",
-                    fontSize: "16px",
-                    fontWeight: "500",
-                    lineHeight: "28px",
-                  }}
-                >
-                  United Kingdom
-                </h6>
-                <h6
-                  style={{
-                    margin: "0",
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    lineHeight: "28px",
-                    color: "#3c3c3c",
-                  }}
-                >
-                  Email:
-                  <Link href="#" style={{ fontWeight: "500" }}>
-                    test@example.com
-                  </Link>
-                </h6>
-                <h6
-                  style={{
-                    margin: "0",
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    lineHeight: "28px",
-                    color: "#3c3c3c",
-                  }}
-                >
-                  Phone No:{" "}
-                  <span style={{ fontWeight: "500" }}>+444 222 111</span>
-                </h6>
-              </td>
-            </tr>
+            {PassengerDetails && Array.isArray(PassengerDetails) ? (
+              PassengerDetails.map((passenger, index) => (                
+                <tr style={{ color: "#616161" }} key={index}>
+                <td style={{ padding: "0 24px 50px" }}>
+                  <h6
+                    style={{
+                      margin: "0",
+                      fontSize: "16px",
+                      fontWeight: "700",
+                      lineHeight: "28px",
+                      color: "#3c3c3c",
+                    }}
+                  >
+                    Name:
+                    <span style={{ fontWeight: "500" }}>{passenger.firstName} {passenger.lastName}</span>
+                  </h6>
+                  <h6
+                    style={{
+                      margin: "0",
+                      fontSize: "16px",
+                      fontWeight: "700",
+                      lineHeight: "28px",
+                      color: "#3c3c3c",
+                    }}
+                  >                                          
+                  </h6>
+                  <h6
+                    style={{
+                      margin: "0",
+                      fontSize: "16px",
+                      fontWeight: "700",
+                      lineHeight: "28px",
+                      color: "#3c3c3c",
+                    }}
+                  >
+                    Email:
+                    <Link href="#" style={{ fontWeight: "500" }}>
+                     {passenger.email}
+                    </Link>
+                  </h6>
+                  <h6
+                    style={{
+                      margin: "0",
+                      fontSize: "16px",
+                      fontWeight: "700",
+                      lineHeight: "28px",
+                      color: "#3c3c3c",
+                    }}
+                  >
+                    Phone No:{" "}
+                    <span style={{ fontWeight: "500" }}>{passenger.phone}</span>
+                  </h6>
+                </td>
+              </tr>
+            ))
+           ) : (
+      <tr>
+        <td colSpan="3"></td>
+      </tr>
+    )}
+            {
+             /*
+             PassengerDetails && Array.isArray(PassengerDetails) & PassengerDetails.forEach((passenger,index) => {
+                if (passenger.type === "ADT") {
+                  if(index == 0){
+                    (
+                     <tr style={{ color: "#616161" }}>
+                     <td style={{ padding: "0 24px 50px" }}>
+                       <h6
+                         style={{
+                           margin: "0",
+                           fontSize: "16px",
+                           fontWeight: "700",
+                           lineHeight: "28px",
+                           color: "#3c3c3c",
+                         }}
+                       >
+                         Name:
+                         <span style={{ fontWeight: "500" }}>{passenger.firstName} {passenger.lastName}</span>
+                       </h6>
+                       <h6
+                         style={{
+                           margin: "0",
+                           fontSize: "16px",
+                           fontWeight: "700",
+                           lineHeight: "28px",
+                           color: "#3c3c3c",
+                         }}
+                       >                                          
+                       </h6>
+                       <h6
+                         style={{
+                           margin: "0",
+                           fontSize: "16px",
+                           fontWeight: "700",
+                           lineHeight: "28px",
+                           color: "#3c3c3c",
+                         }}
+                       >
+                         Email:
+                         <Link href="#" style={{ fontWeight: "500" }}>
+                          {passenger.email}
+                         </Link>
+                       </h6>
+                       <h6
+                         style={{
+                           margin: "0",
+                           fontSize: "16px",
+                           fontWeight: "700",
+                           lineHeight: "28px",
+                           color: "#3c3c3c",
+                         }}
+                       >
+                         Phone No:{" "}
+                         <span style={{ fontWeight: "500" }}>{passenger.phone}</span>
+                       </h6>
+                     </td>
+                   </tr>
+                    )
+                   }
+                   else{
+                    <tr style={{ color: "#616161" }}>
+                    <td style={{ padding: "0 24px 50px" }}>
+                      <h6
+                        style={{
+                          margin: "0",
+                          fontSize: "16px",
+                          fontWeight: "700",
+                          lineHeight: "28px",
+                          color: "#3c3c3c",
+                        }}
+                      >
+                        Name:
+                        <span style={{ fontWeight: "500" }}>{passenger.firstName} {passenger.lastName}</span>
+                      </h6>
+                      <h6
+                        style={{
+                          margin: "0",
+                          fontSize: "16px",
+                          fontWeight: "700",
+                          lineHeight: "28px",
+                          color: "#3c3c3c",
+                        }}
+                      >                                          
+                      </h6>
+                     
+                      </td>
+                  </tr>
+                   }                 
+                }
+                     
+              })
+            */
+            }
+           
           </tbody>
         </table>
       </div>

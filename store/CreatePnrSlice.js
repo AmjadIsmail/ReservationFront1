@@ -1,15 +1,15 @@
 const {createSlice} = require("@reduxjs/toolkit");
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { useEffect, useState } from "react";
 import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+
 import axiosInstance from '@/utils/axiosInstance';
 
 export const PNR_Multi = createAsyncThunk(
     'flights/PNR_Muliti',
     async (multirequest, { rejectWithValue }) => {
       try {
-     debugger;        
         const response = await axiosInstance.post('PNR', multirequest);
         console.log("Add Multi " + response.data)      
         return response.data; 
@@ -59,7 +59,7 @@ export const PNR_Multi = createAsyncThunk(
       try {
      debugger;
         console.log(createtstrequest)
-        const response = await axiosInstance.post('FairPricePnr', createtstrequest);
+        const response = await axiosInstance.post('CreateTst', createtstrequest);
         console.log("Create TST Response " +response.data)      
         return response.data; 
       } catch (error) {        
@@ -75,8 +75,8 @@ export const PNR_Multi = createAsyncThunk(
       try {
      debugger;
         console.log(commitpnrrequest)
-        const response = await axiosInstance.post('CommitPnr', commitpnrrequest);
-        console.log("Commit pnr Response " +response.data)      
+        const response = await axiosInstance.post('Pnr/CommitPnr', commitpnrrequest);
+        console.log("Commit pnr Response " +response.data)    
         return response.data; 
       } catch (error) {        
         console.log("Commit Pnr Error " + error);
@@ -87,7 +87,7 @@ export const PNR_Multi = createAsyncThunk(
   
 const Slice = createSlice({  
  
-    name : 'flights',
+    name : 'generatePnr',
     initialState : {     
       PNR_Multi_Request : null,
       PNR_Multi_Response : null,
@@ -102,15 +102,33 @@ const Slice = createSlice({
       Create_Tst_Response : null ,
       Create_Tst_Error : null ,
       Create_Tst_Status : null ,
-      Commit_Pnr_Response :  null,
+      CommitPnrResponse :  null,
       Commit_Pnr_Error :  null ,
-      Commit_Pnr_Error_Status : ''    
+      Commit_Pnr_Error_Status : '' ,
+      PNR_Number  : '',  
+      PassengerDetails : [] 
     },
     reducers : {
-        setPnrMulti:(state,action)=> 
+          setPnrMulti:(state,action)=> 
             {              
               state.PNR_Multi_Request = { ...state.PNR_Multi_Request, ...action.payload };              
+           },
+           setPassengerDetails:(state,action)=> 
+            {       
+             // debugger;       
+              state.PassengerDetails = { ...state.PassengerDetails, ...action.payload };              
+           },
+           setPnr:(state,action)=> 
+            {       
+              debugger;       
+              state.PNR_Number = { ...state.PNR_Number, ...action.payload };              
+           },
+           pnrResponse:(state,action)=> 
+            {       
+              debugger;       
+              state.CommitPnrResponse = { ...state.CommitPnrResponse, ...action.payload };              
            }
+
       },
       extraReducers: (builder) => {
         builder
@@ -118,7 +136,7 @@ const Slice = createSlice({
             state.PNR_Multi_Status = 'loading';
           })
           .addCase(PNR_Multi.fulfilled, (state, action) => {
-           debugger;
+           //debugger;
            if(action.payload.isSuccessful === false){
             state.PNR_Multi_Status = 'failed';
             state.PNR_Multi_Error = action.payload.response;
@@ -137,7 +155,7 @@ const Slice = createSlice({
             state.Create_Fop_Status = 'loading';
           })
           .addCase(Create_Fop.fulfilled, (state, action) => {
-           debugger;
+          // debugger;
            if(action.payload.isSuccessful === false){
             state.Create_Fop_Status = 'failed';
             state.Create_Fop_Error = action.payload.response;
@@ -175,7 +193,7 @@ const Slice = createSlice({
             state.Create_Tst_Status = 'loading';
           })
           .addCase(Create_Tst.fulfilled, (state, action) => {
-           debugger;
+          // debugger;
            if(action.payload.isSuccessful === false){
             state.Create_Tst_Status = 'failed';
             state.Create_Tst_Error = action.payload.response;
@@ -201,8 +219,9 @@ const Slice = createSlice({
            }
            else{
             state.Commit_Pnr_Error_Status = 'succeeded';
-            state.Commit_Pnr_Response = action.payload;
+            state.CommitPnrResponse = action.payload;
             state.Commit_Pnr_Error = null;
+            state.PNR_Number = state.PNR_Number === "" ? action.payload?.data?.pnrHeader?.reservation?.pnr : state.PNR_Number
            }
             
           }).addCase(Commit_Pnr.rejected, (state, action) => {
@@ -213,5 +232,5 @@ const Slice = createSlice({
       },
     });
 
- export const {setPnrMulti} = Slice.actions;
+ export const {setPnrMulti,setPassengerDetails,setPnr,pnrResponse} = Slice.actions;
  export default Slice.reducer;

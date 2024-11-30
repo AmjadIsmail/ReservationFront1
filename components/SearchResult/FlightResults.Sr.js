@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import {useDispatch, useSelector} from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { submitairSellRequest,setAirSell } from "@/store/AirSellSlice";
+import { setSelectedFlights } from "@/store/AvailabilitySlice";
 
 //const ImgUrl = "https://mainimageservice.azureedge.net/00-tup-web/images/airline/bigimages/";
 const results = [
@@ -191,9 +192,10 @@ const FlightResultsSr = () => {
   
   const router = useRouter();
   const dispatch = useDispatch();
-  const flightResults = useSelector((state) => state.flights.response);
-  const flightRequest = useSelector((state) => state.flights.flights);
-  const [selectedFlightId , SetSelectedFlightId] = useState(0);
+  const flightResults = useSelector((state) => state?.flights?.response);
+  const flightRequest = useSelector((state) => state?.flights?.flights);
+  const flightError = useSelector((state) => state?.flight?.error);
+  //const [selectedFlightId , SetSelectedFlightId] = useState(0);
 
   function convertToDateFormat(dateString) {
     if(dateString != null){
@@ -258,9 +260,14 @@ const FlightResultsSr = () => {
   }
  
   const handleClick = (itemid) => {     
-    debugger;
-    SetSelectedFlightId(itemid);
+    
+   // SetSelectedFlightId(itemid);
     const flight = flightResults.data.find(flight => flight.id === itemid.toString());   
+    try {  
+      dispatch(setSelectedFlights(flight));      
+     } catch (error) {
+       console.error('Error calling setselectedFight:', error.message);       
+     }
     console.log(flightData);
     const AirSellRequset = getAirSellRequest(flight);
     console.log(AirSellRequset);
@@ -274,7 +281,7 @@ const FlightResultsSr = () => {
        
      }
   try {
-    debugger; 
+    
     dispatch(submitairSellRequest(AirSellRequset)).unwrap().then(()=>{
      router.push("/flight-confirmation");
    
@@ -286,7 +293,7 @@ const FlightResultsSr = () => {
    }
   }
   if(flightResults != null){
-  //  debugger;
+    const logoPath = "@/public/images//airline-logo/";
     return (
       <div className="flight-detail-sec">
       <div className="title-bar">
@@ -312,10 +319,10 @@ const FlightResultsSr = () => {
                 <Row className="align-items-center">
                   <Col md={9}>
                     <h5 className="mb-0">
-                   {flightRequest.origin}
+                   {item?.itineraries[0]?.airport_city != null ? item?.itineraries[0]?.airport_city : flightRequest.origin }
                   <i className="fas fa-arrow-right fa-1x textC3"></i>
                   {" "}
-                  {flightRequest.destination}
+                  {item?.itineraries[1]?.airport_city != null ? item?.itineraries[1]?.airport_city :flightRequest.destination}
                     </h5>
                   </Col>
                 </Row>
@@ -334,7 +341,7 @@ const FlightResultsSr = () => {
                         <Row>
                           <Col md={4}>
                           <div className="logo-sec">
-                            <Image src={img1} className="img-fluid" alt=""/>
+                            <Image src={img1} className="img-fluid" alt="" width={240} height={140}/>
                           <span className="title">{item?.itineraries[0]?.segments[0]?.marketingCarrierName}</span>
                         </div>
                           </Col>
@@ -347,17 +354,27 @@ const FlightResultsSr = () => {
                             <div className="airport-progress">
                               <i className="fas fa-plane-departure float-start"></i>
                               <i className="fas fa-plane-arrival float-end"></i>
-                              <div className="stop">{item?.itineraries[0]?.segments[0]?.numberOfStops}</div>
+                              <div className="stop">
+                             
+                                {                            
+                             (item?.itineraries[0]?.segments[0]?.numberOfStops === 0
+                             ? "Direct"
+                             : item?.itineraries[0]?.segments[0]?.numberOfStops === 1
+                             ? item?.itineraries[0]?.segments[0]?.numberOfStops + " stop"
+                             : item?.itineraries[0]?.segments[0]?.numberOfStops + " stops")
+                              }</div>
                             </div>
                             <div className="airport-name arrival">
-                              <h4>{formatDateTime(item?.itineraries[0]?.segments[0]?.arrival?.at)}</h4>
-                              <h6>{item?.itineraries[0]?.segments[0]?.arrival?.iataCode + " - " + item?.itineraries[0]?.segments[0]?.arrival?.iataName}</h6>
+                              <h4>{formatDateTime(item?.itineraries[0]?.segments[item?.itineraries[1]?.segments?.length -1]?.arrival?.at)}</h4>
+                              <h6>{item?.itineraries[0]?.segments[item?.itineraries[0]?.segments?.length-1]?.arrival?.iataCode + " - " + item?.itineraries[0]?.segments[item?.itineraries[0]?.segments?.length -1]?.arrival?.iataName}</h6>
                             </div>
                           </div>
                           </Col>
                           <Col md={3}></Col>
                         </Row>
-                        {
+                        { 
+                          /*
+                                     {
                         
                         item?.itineraries[0]?.segments?.length > 1 ? 
                         (
@@ -423,6 +440,9 @@ const FlightResultsSr = () => {
                         ) : ""
                        } 
  
+                          */
+                        }
+             
                       </div>
                     </div>
                     <div className="inbound">
@@ -435,7 +455,7 @@ const FlightResultsSr = () => {
                         <Row>
                           <Col md={4}>
                           <div className="logo-sec">
-                                <Image src={img4} className="img-fluid" alt="" width={240} height={140} />
+                                <Image src={img4} className="img-fluid" alt="" />
                                 <span className="title">{item?.itineraries[1]?.segments[0]?.marketingCarrierName}</span>
                           </div>
                           </Col>
@@ -448,17 +468,29 @@ const FlightResultsSr = () => {
                                 <div className="airport-progress">
                                   <i className="fas fa-plane-departure float-start"></i>
                                   <i className="fas fa-plane-arrival float-end"></i>
-                                  <div className="stop">{item?.itineraries[1]?.segments[0]?.numberOfStops}</div>
+                                  <div className="stop">
+                                    {/*item?.itineraries[1]?.segments[0]?.numberOfStops*/}
+                                   { (item?.itineraries[1]?.segments[0]?.numberOfStops === 0
+                             ? "Direct"
+                             : item?.itineraries[1]?.segments[0]?.numberOfStops === 1
+                             ? item?.itineraries[1]?.segments[0]?.numberOfStops + " stop"
+                             : item?.itineraries[1]?.segments[0]?.numberOfStops + " stops")
+                              }
+                                    
+                                    </div>
                                 </div>
                                 <div className="airport-name arrival">
-                                <h4>{formatDateTime(item?.itineraries[1]?.segments[0]?.arrival?.at)}</h4>
-                                <h6>{item?.itineraries[1]?.segments[0]?.arrival?.iataCode + " - " + item?.itineraries[1]?.segments[0]?.arrival?.iataName}</h6>
+                                <h4>{formatDateTime(item?.itineraries[1]?.segments[item?.itineraries[1]?.segments.length -1]?.arrival?.at)}</h4>
+                                <h6>{item?.itineraries[1]?.segments[item?.itineraries[1]?.segments.length -1]?.arrival?.iataCode + " - " + item?.itineraries[1]?.segments[item?.itineraries[1]?.segments.length-1]?.arrival?.iataName}</h6>
                                 </div>
                               </div>
                             </Col>
                             <Col md={3}></Col>  
                         </Row>
                         {
+                        /**
+                         * 
+                          {
                         
                         item?.itineraries[1]?.segments?.length > 1 ? 
                         (
@@ -523,6 +555,8 @@ const FlightResultsSr = () => {
                       </Row>  
                         ) : ""
                        } 
+                         */}
+                       
                       </div>
                     </div>
                   </div>

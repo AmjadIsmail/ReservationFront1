@@ -9,7 +9,7 @@ export const store = configureStore({
     reducer: {
         flights: flightsReducer, // Ensure the key matches your slice name
         airsell: airSellReducer,
-        createpnr : createPnrSliceReducer,
+        generatePnr : createPnrSliceReducer,
       },
 })
 export default store;

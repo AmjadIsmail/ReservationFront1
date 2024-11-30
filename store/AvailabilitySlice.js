@@ -11,7 +11,7 @@ export const submitFlightData = createAsyncThunk(
     'flights/submitFlightData',
     async (flightData, { rejectWithValue }) => {
       try {
-     debugger;
+  
         console.log(flightData)
         const response = await axiosInstance.post('availability', flightData);
         console.log(response.data)      
@@ -29,7 +29,6 @@ export const submitFlightData = createAsyncThunk(
     'flights/SubmitSignout',
     async (singoutRequest, { rejectWithValue }) => {
       try {
-     debugger;
         console.log(singoutRequest)
         const response = await axiosInstance.post('availability/signout', singoutRequest);
         console.log(response.data)      
@@ -55,6 +54,7 @@ export const submitFlightData = createAsyncThunk(
         cabinClass: '',
         flightType: '',       
       },
+      selectedFlight : null,
       status: 'idle',
       error: null,
       response: null
@@ -63,6 +63,10 @@ export const submitFlightData = createAsyncThunk(
         setFlights:(state,action)=> 
             {              
               state.flights = { ...state.flights, ...action.payload };              
+           },
+        setSelectedFlights:(state,action)=> 
+            {              
+              state.selectedFlight = { ...state.selectedFlight, ...action.payload };              
            }
       },
       extraReducers: (builder) => {
@@ -71,7 +75,7 @@ export const submitFlightData = createAsyncThunk(
             state.status = 'loading';
           })
           .addCase(submitFlightData.fulfilled, (state, action) => {
-           debugger;
+          
            if(action.payload.isSuccessful === false){
             state.status = 'failed';
             state.response = action.payload.data.error;
@@ -91,5 +95,5 @@ export const submitFlightData = createAsyncThunk(
       },
     });
 
- export const {setFlights} = Slice.actions;
+ export const {setFlights,setSelectedFlights} = Slice.actions;
  export default Slice.reducer;
