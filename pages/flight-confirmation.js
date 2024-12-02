@@ -184,188 +184,6 @@ const FlightConfirmation = () => {
     }
   };
 
-
-  const DispatchData=()=>{
-
-  let session = getSession();
-  session.sequenceNumber = session.sequenceNumber + 1;
-  const pnrMultirequest = CreatePnrMultiRequest(formData,session);
-  try{
-    dispatch(setPassengerDetails(pnrMultirequest.passengerDetails));
-   }catch(error){
-     console.error('Error calling setPassengerDetails:', error.message);
-   }
-  const addPnrMultiRequset = {
-    sessionDetails : pnrMultirequest.sessionDetails,
-    passengerDetails : pnrMultirequest.passengerDetails
-  }  
-  let session2 = getSession();
-  session2.sequenceNumber = session2.sequenceNumber + 2;
-  const fopRequest = CreateFopRequest(session2);
-  const FopRequest = {
-    sessionDetails : fopRequest.sessionDetails,
-    transactionDetailsCode : fopRequest.transactionDetailsCode,
-    fopCode : fopRequest.fopCode
-  }
-
-  let session3 = getSession();
-  session3.sequenceNumber = session3.sequenceNumber + 3;
-  const carrierCode = airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.marketingCompany;
-  const farePriceRequest = CreateFarePricePnrRequest(carrierCode,session3);
-  const pricePnrRequest = {
-    sessionDetails : farePriceRequest.sessionDetails,
-    pricingOptionKey : farePriceRequest.pricingOptionKey,
-    carrierCode : carrierCode
-  }
-  let session4 = getSession();
-  session3.sequenceNumber = session3.sequenceNumber + 4;
-  const tstRequest = CreateTstRequest(session4);
- const ticketTstRequest = {
-  sessionDetails : tstRequest.sessionDetails,
-  adults : tstRequest.adults,
-  children : tstRequest.children,
-  infants : tstRequest.infants
- }
- let session5 = getSession();
- session3.sequenceNumber = session3.sequenceNumber + 5;
- const commitPnrRequest = CreateCommitPnrRequest(session5); 
-
- const pnrCommitRequest = {
-   sessionDetails : commitPnrRequest.sessionDetails,
-   optionCode1 : commitPnrRequest.optionCode1,
-   optionCode2 : commitPnrRequest.optionCode2,
- }  
-
-                /** Sending Pnr Multi Request */
-  try {  
-    dispatch(setPnrMulti(pnrMultirequest));    
-   } catch (error) { console.error('Error calling setPnrMulti:', error.message); }
-
-  let isProcess = false;
- // try {
-    
-  //   dispatch(PNR_Multi(addPnrMultiRequset)).unwrap().then(()=>{
-  //  console.log("Pnr Multi Called Successfully");  
-  
-  //   })  
-    /*
-    dispatch(PNR_Multi(addPnrMultiRequset))
-  .unwrap()
-  .then(() => {
-    debugger;
-    console.log("PNR Multi API call completed");
-    FopRequest.sessionDetails.sequenceNumber = FopRequest.sessionDetails.sequenceNumber + 1;
-    return dispatch(Create_Fop(FopRequest)).unwrap().then(()=>{
-      debugger;
-      console.log("Create_Fop API call completed");
-      pricePnrRequest.sessionDetails.sequenceNumber = pricePnrRequest.sessionDetails.sequenceNumber + 1;
-      dispatch(Fare_Price_Pnr(pricePnrRequest)).unwrap().then(()=>{
-        debugger;
-        console.log("Fare Price Called Successfully");  
-        ticketTstRequest.sessionDetails.sequenceNumber = ticketTstRequest.sessionDetails.sequenceNumber + 1;
-        dispatch(Create_Tst(ticketTstRequest)).unwrap().then(()=>{
-          debugger;
-          console.log("Tst Requset Called Successfully");  
-          pnrCommitRequest.sessionDetails.sequenceNumber = pnrCommitRequest.sessionDetails.sequenceNumber + 1;
-          dispatch(Commit_Pnr(pnrCommitRequest)).unwrap().then(()=>{
-            console.log("Commit pnr Requset Called Successfully");  
-            isProcess = true;
-             })   
-
-           })
-
-         })    
-    })
-  })
-  .then(() => {
-    console.log("FOP API call completed successfully");
-  })
-  .catch((error) => {
-    console.error("Error occurred:", error);
-  });
-   } catch (error) {
-     console.log('Error api PNR multi call:', error.message);   
-     setApiResponse('Error in calling Pnr Multi ' + error)
-     isProcess = false;
-   }
-
-
-   */
-  //  debugger;
-  
-  
-   
-
- /** Sending Pnr Create FOP */
-  // if(isProcess){
-  //   try {
-  //     debugger; 
-  //     dispatch(Create_Fop(FopRequest)).unwrap().then(()=>{
-  //    console.log("FOP Called Successfully");  
-  //    isProcess = true;
-  //     })    
-  //    } catch (error) {
-  //      console.log('Error FOP api call:', error.message);   
-  //      setApiResponse('Error in calling FOP ' + error)
-  //      isProcess = false;
-  //    }
-  //  }
-  //  debugger;
- 
-
- /** Sending Fare Price Request */
-
-
-//  if(isProcess){
-//   try {
-//     debugger; 
-//     dispatch(Fare_Price_Pnr(pricePnrRequest)).unwrap().then(()=>{
-//    console.log("Fare Price Called Successfully");  
-//    isProcess = true;
-//     })    
-//    } catch (error) {
-//      console.log('Error Fare PRice api call:', error.message);   
-//      setApiResponse('Error in calling FOP ' + error)
-//      isProcess = false;
-//    }
-//  }
-//  debugger;
-
-   /** Sending TST Request */
-  //  if(isProcess){
-  //   try {
-  //     debugger; 
-  //     dispatch(Create_Tst(ticketTstRequest)).unwrap().then(()=>{
-  //    console.log("Tst Requset Called Successfully");  
-  //    isProcess = true;
-  //     })    
-  //    } catch (error) {
-  //      console.log('Tst Requset PRice api call:', error.message);   
-  //      setApiResponse('Error in calling Tst Requset ' + error)
-  //      isProcess = false;
-  //    }
-  //  }
-  //  debugger;
-  
-
-  //  if(isProcess){
-  //   try {
-  //     debugger; 
-  //     dispatch(Commit_Pnr(pnrCommitRequest)).unwrap().then(()=>{
-  //    console.log("Commit pnr Requset Called Successfully");  
-  //    isProcess = true;
-  //     })    
-  //    } catch (error) {
-  //      console.log('Commit Pnr Requset api call:', error.message);   
-  //      setApiResponse('Error in calling commit pnr Requset ' + error)
-  //      isProcess = false;
-  //    }
-  //  }
-    if(isProcess){
-      router.push("/confirmation");
-    }
-  }
-
   function getSession(){
     const storedSession = localStorage.getItem("session");
     if (storedSession) {
@@ -449,8 +267,7 @@ const FlightConfirmation = () => {
   }
 
   function CreateFarePricePnrRequest(_carrierCode,session){
-    //let session = getSession();
-    const farepricerequest = {
+      const farepricerequest = {
       sessionDetails : session,
       pricingOptionKey: "RP,RU",
       carrierCode : _carrierCode
@@ -459,7 +276,6 @@ const FlightConfirmation = () => {
   }
 
   function CreateTstRequest(session){
-    //let session = getSession();
     const createtstrequest = {
       sessionDetails : session,
       adults: flightRequest.adults,
@@ -470,8 +286,7 @@ const FlightConfirmation = () => {
   }
  
   function CreateCommitPnrRequest(session){
-   // let session = getSession();
-    const createcommitpnr = {
+   const createcommitpnr = {
       sessionDetails : session,
       optionCode1: "10",
       optionCode2 : "30",
@@ -515,7 +330,8 @@ const FlightConfirmation = () => {
                     <Row>
                       <Col md={3}>
                         <div className="logo-sec">
-                          <Image src={img1} className="img-fluid" alt="" />
+                          {/* <Image src={img1} className="img-fluid" alt="" /> */}
+                          <Image src={`/images/airline-logo/${airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.marketingCompany}.png`} alt={airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.marketingCompany} width={340} height={240} className="img-fluid"/>  
                           <span className="title">{airsellResults?.data?.airSellResponse[0]?.flightDetails[0]?.marketingCompanyName}</span>
                         </div>
                       </Col>
@@ -552,7 +368,8 @@ const FlightConfirmation = () => {
                         (   <Row>
                           <Col md={3}>
                             <div className="logo-sec">
-                              <Image src={img1} className="img-fluid" alt="" />
+                              {/* <Image src={img1} className="img-fluid" alt="" /> */}
+                              <Image src={`/images/airline-logo/${airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.marketingCompany}.png`} alt={airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.marketingCompany} width={340} height={240} className="img-fluid"/>
                               <span className="title">{airsellResults?.data?.airSellResponse[0]?.flightDetails[1]?.marketingCompanyName}</span>
                             </div>
                           </Col>
@@ -591,7 +408,8 @@ const FlightConfirmation = () => {
                         (   <Row>
                           <Col md={3}>
                             <div className="logo-sec">
-                              <Image src={img1} className="img-fluid" alt="" />
+                              {/* <Image src={img1} className="img-fluid" alt="" /> */}
+                              <Image src={`/images/airline-logo/${airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.marketingCompany}.png`} alt={airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.marketingCompany} width={340} height={240} className="img-fluid"/>
                               <span className="title">{airsellResults?.data?.airSellResponse[0]?.flightDetails[2]?.marketingCompanyName}</span>
                             </div>
                           </Col>
@@ -634,7 +452,8 @@ const FlightConfirmation = () => {
                     <Row>
                       <Col md={3}>
                         <div className="logo-sec">
-                          <Image src={img1} className="img-fluid" alt="" />
+                          {/* <Image src={img1} className="img-fluid" alt="" /> */}
+                          <Image src={`/images/airline-logo/${airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.marketingCompany}.png`} alt={airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.marketingCompany} width={340} height={240} className="img-fluid"/>
                           <span className="title">{airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.marketingCompanyName}</span>
                         </div>
                       </Col>
@@ -671,7 +490,7 @@ const FlightConfirmation = () => {
                         (   <Row>
                           <Col md={3}>
                             <div className="logo-sec">
-                              <Image src={img1} className="img-fluid" alt="" />
+                            <Image src={`/images/airline-logo/${airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.marketingCompany}.png`} alt={airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.marketingCompany} width={340} height={240} className="img-fluid"/>
                               <span className="title">{airsellResults?.data?.airSellResponse[1]?.flightDetails[1]?.marketingCompanyName}</span>
                             </div>
                           </Col>
@@ -710,7 +529,8 @@ const FlightConfirmation = () => {
                         (   <Row>
                           <Col md={3}>
                             <div className="logo-sec">
-                              <Image src={img1} className="img-fluid" alt="" />
+                              {/* <Image src={img1} className="img-fluid" alt="" /> */}
+                              <Image src={`/images/airline-logo/${airsellResults?.data?.airSellResponse[1]?.flightDetails[2]?.marketingCompany}.png`} alt={airsellResults?.data?.airSellResponse[1]?.flightDetails[0]?.marketingCompany} width={340} height={240} className="img-fluid"/>
                               <span className="title">{airsellResults?.data?.airSellResponse[1]?.flightDetails[2]?.marketingCompanyName}</span>
                             </div>
                           </Col>

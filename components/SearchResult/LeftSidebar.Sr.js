@@ -4,19 +4,63 @@ import Image from "next/image";
 import sunrise from "@/public/images/icon/time/sunrise.png";
 import sun from "@/public/images/icon/time/sun.png";
 import night from "@/public/images/icon/time/night.png";
-import { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import ReactSlider from "react-slider";
 import { Button, Input, Label } from "reactstrap";
+import {useDispatch, useSelector} from 'react-redux';
+import { setSelectedCarriers } from "@/store/AvailabilitySlice";
+import { setSelectedFlights } from "@/store/AvailabilitySlice";
 
-const LeftSidebarSr = () => {
+const LeftSidebarSr = () =>  {
+  debugger;
+  const dispatch = useDispatch();
   const [range, setRange] = useState([0, 100]);
-
+  const flightResults = useSelector((state) => state?.flights?.response?.data);
+  const flightRequest = useSelector((state) => state?.flights?.flights);
+  const marketingCarriers = useSelector((state) => state?.flights?.marketingCarriers);
   const [open, setOpen] = useState(false);
   const [openStops, setOpenStops] = useState(false);
   const [openPrice, setOpenPrice] = useState(false);
   const [openAirlines, setOpenAirlines] = useState(false);
   const [openDepTime, setOpenDepTime] = useState(false);
   const [openArrTime, setOpenArrTime] = useState(false);
+  const [selectedCarriers, setSelectedCarriers] = useState([]);
+  const [filteredFlights, setFilteredFlights] = useState([]);
+  const [changeAirline,setChangeAirline] = useState(null);
+
+  useEffect(() => {
+    debugger;
+    if(selectedCarriers.length > 0 ){    
+     //dispatch(setSelectedCarriers(selectedCarriers)); 
+      console.log('changeAirline is not empty');
+      setChangeAirline(null);
+    }
+    const filtered = flightResults?.filter((flight) =>
+      flight.itineraries.some((itinerary) =>
+        itinerary.segments.some((segment) =>
+          selectedCarriers.includes(segment.marketingCarrierCode)
+        )
+      )
+    );
+    setFilteredFlights(filtered);
+  }, [selectedCarriers, flightResults]);
+
+  const handleCheckboxChange = (carrierCode) => {
+    debugger;
+    // setSelectedCarriers((prevSelected) =>
+    //   prevSelected.includes(carrierCode)
+    //     ? prevSelected.filter((code) => code !== carrierCode)
+    //     : [...prevSelected, carrierCode]
+    // );
+     // Dispatch action to update selected carriers
+     const updatedSelectedCarriers = selectedCarriers.includes(carrierCode)
+     ? selectedCarriers.filter((code) => code !== carrierCode)
+     : [...selectedCarriers, carrierCode];
+     setSelectedCarriers(updatedSelectedCarriers);
+     setChangeAirline(updatedSelectedCarriers);
+     dispatch(setSelectedCarriers(selectedCarriers)); 
+
+  };
 
   const toggleCollapse = (e) => {
     e.preventDefault();
@@ -201,76 +245,29 @@ const LeftSidebarSr = () => {
                 }}
               >
                 <div className="collection-brand-filter">
-                  <div className="form-check collection-filter-checkbox">
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="wifi"
-                    />
-                    <Label className="form-check-label" for="wifi">
-                      Qatar airways
-                    </Label>
-                  </div>
-                  <div className="form-check collection-filter-checkbox">
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="spa"
-                    />
-                    <Label className="form-check-label" for="spa">
-                      singapore airlines
-                    </Label>
-                  </div>
-                  <div className="form-check collection-filter-checkbox">
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="pet"
-                    />
-                    <Label className="form-check-label" for="pet">
-                      Nippon Airways
-                    </Label>
-                  </div>
-                  <div className="form-check collection-filter-checkbox">
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="parking"
-                    />
-                    <Label className="form-check-label" for="parking">
-                      Cathay Pacific
-                    </Label>
-                  </div>
-                  <div className="form-check collection-filter-checkbox">
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="swimming"
-                    />
-                    <Label className="form-check-label" for="swimming">
-                      Emirates
-                    </Label>
-                  </div>
-                  <div className="form-check collection-filter-checkbox">
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="chinese"
-                    />
-                    <Label className="form-check-label" for="chinese">
-                      Hainan Airlines
-                    </Label>
-                  </div>
-                  <div className="form-check collection-filter-checkbox">
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="restaurant"
-                    />
-                    <Label className="form-check-label" for="restaurant">
-                      Qantas Airways
-                    </Label>
-                  </div>
+                {marketingCarriers && marketingCarriers.length > 0 ? (
+                    marketingCarriers.map((carrier, index) => (
+                <div className="form-check collection-filter-checkbox" key={index}>
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id={`carrier-${carrier.marketingCarrierCode}`}
+                  //  onChange={() => handleCheckboxChange(carrier.marketingCarrierCode)}
+                    onChange={() => {
+                      handleCheckboxChange(carrier.marketingCarrierCode);                     
+                    }}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor={`carrier-${carrier.marketingCarrierCode}`}
+                  >
+                    {carrier.marketingCarrierName}
+                  </label>
+                </div>
+                    ))
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
               </div>
             </div>

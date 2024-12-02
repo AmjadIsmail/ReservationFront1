@@ -57,7 +57,10 @@ export const submitFlightData = createAsyncThunk(
       selectedFlight : null,
       status: 'idle',
       error: null,
-      response: null
+      response: null,
+      marketingCarriers : null,
+      filteredFlights: null, 
+      selectedCarriers: null, 
     },
     reducers : {
         setFlights:(state,action)=> 
@@ -67,7 +70,18 @@ export const submitFlightData = createAsyncThunk(
         setSelectedFlights:(state,action)=> 
             {              
               state.selectedFlight = { ...state.selectedFlight, ...action.payload };              
-           }
+           },
+        setSelectedCarriers(state, action) {
+          debugger;
+            state.selectedCarriers = action.payload;     
+            state.filteredFlights = state.response.data.filter((flight) =>
+              flight.itineraries.some((itinerary) =>
+                itinerary.segments.some((segment) =>
+                  state.selectedCarriers.includes(segment.marketingCarrierCode)
+                )
+              )
+            );
+    },
       },
       extraReducers: (builder) => {
         builder
@@ -75,7 +89,7 @@ export const submitFlightData = createAsyncThunk(
             state.status = 'loading';
           })
           .addCase(submitFlightData.fulfilled, (state, action) => {
-          
+          debugger;
            if(action.payload.isSuccessful === false){
             state.status = 'failed';
             state.response = action.payload.data.error;
@@ -85,6 +99,8 @@ export const submitFlightData = createAsyncThunk(
             state.status = 'succeeded';
             state.response = action.payload;
             state.error = null;
+            state.marketingCarriers = getMarketingCarrierInfo(action.payload.data);
+            state.filteredFlights = action.payload.data;
            }
             
           })
@@ -95,5 +111,35 @@ export const submitFlightData = createAsyncThunk(
       },
     });
 
- export const {setFlights,setSelectedFlights} = Slice.actions;
+
+    const getMarketingCarrierInfo = (data) => {
+      const marketingCarriers = [];
+    try{
+      data.forEach((flight) => {
+        flight.itineraries.forEach((itinerary) => {
+          itinerary.segments.forEach((segment) => {
+            marketingCarriers.push({
+              marketingCarrierCode: segment.marketingCarrierCode,
+              marketingCarrierName: segment.marketingCarrierName,
+            });
+          });
+        });
+      
+      });
+
+      const uniqueCarriers = Array.from(
+        new Map(
+          marketingCarriers.map((item) => [
+            item.marketingCarrierCode,
+            item,
+          ])
+        ).values()
+      );
+    
+      return uniqueCarriers;
+    }catch(error){
+    }
+    return marketingCarriers;
+    }
+ export const {setFlights,setSelectedFlights,setSelectedCarriers} = Slice.actions;
  export default Slice.reducer;

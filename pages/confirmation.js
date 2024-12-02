@@ -255,17 +255,8 @@ const Confirmation = () => {
                                 style={{ fontWeight: "600", color: "#3c3c3c" }}
                               >
                               { flightRequest.adults} Adults,
-                              { flightRequest?.children} Children ,
-                              { flightRequest?.infant} Infant
-                                {/* {(
-                                  flightRequest?.children !== 0 ) && (
-                                  Children (flightRequest?.children)
-                                )}
-                                {(flightRequest?.infant !== 0 ) && (
-                                  Infant (flightRequest?.infant)
-                                )
-                                
-                                } */}
+                              { flightRequest?.children > 0 ? flightRequest?.children + " Children" : ""}                             
+                              { flightRequest?.infant > 0 ? flightRequest?.infant + " Infant" : ""}
                               </td>
                             </tr>
                           </tbody>
