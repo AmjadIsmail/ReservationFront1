@@ -8,8 +8,8 @@ import React, { useEffect, useState } from 'react';
 import ReactSlider from "react-slider";
 import { Button, Input, Label } from "reactstrap";
 import {useDispatch, useSelector} from 'react-redux';
-import { setSelectedCarriers } from "@/store/AvailabilitySlice";
-import { setSelectedFlights } from "@/store/AvailabilitySlice";
+import { setSelectedCarriers , setSelectedFlights } from "@/store/AvailabilitySlice";
+
 
 const LeftSidebarSr = () =>  {
   debugger;
@@ -24,26 +24,25 @@ const LeftSidebarSr = () =>  {
   const [openAirlines, setOpenAirlines] = useState(false);
   const [openDepTime, setOpenDepTime] = useState(false);
   const [openArrTime, setOpenArrTime] = useState(false);
-  const [selectedCarriers, setSelectedCarriers] = useState([]);
+  const [selectedAirlines, setSelectedAirlines] = useState([]);
   const [filteredFlights, setFilteredFlights] = useState([]);
   const [changeAirline,setChangeAirline] = useState(null);
 
-  useEffect(() => {
-    debugger;
-    if(selectedCarriers.length > 0 ){    
-     //dispatch(setSelectedCarriers(selectedCarriers)); 
-      console.log('changeAirline is not empty');
-      setChangeAirline(null);
-    }
-    const filtered = flightResults?.filter((flight) =>
-      flight.itineraries.some((itinerary) =>
-        itinerary.segments.some((segment) =>
-          selectedCarriers.includes(segment.marketingCarrierCode)
-        )
-      )
-    );
-    setFilteredFlights(filtered);
-  }, [selectedCarriers, flightResults]);
+  // useEffect(() => {
+  //   debugger;
+  //   if(selectedAirlines.length > 0 ){         
+  //     console.log('changeAirline is not empty');
+  //     setChangeAirline(null);
+  //   }
+  //   // const filtered = flightResults?.filter((flight) =>
+  //   //   flight.itineraries.some((itinerary) =>
+  //   //     itinerary.segments.some((segment) =>
+  //   //      setSelectedAirlines.includes(segment.marketingCarrierCode)
+  //   //     )
+  //   //   )
+  //  // );
+  //   setFilteredFlights(filtered);
+  // }, [selectedAirlines, flightResults]);
 
   const handleCheckboxChange = (carrierCode) => {
     debugger;
@@ -53,12 +52,12 @@ const LeftSidebarSr = () =>  {
     //     : [...prevSelected, carrierCode]
     // );
      // Dispatch action to update selected carriers
-     const updatedSelectedCarriers = selectedCarriers.includes(carrierCode)
-     ? selectedCarriers.filter((code) => code !== carrierCode)
-     : [...selectedCarriers, carrierCode];
-     setSelectedCarriers(updatedSelectedCarriers);
-     setChangeAirline(updatedSelectedCarriers);
-     dispatch(setSelectedCarriers(selectedCarriers)); 
+     const updatedSelectedAirlines = selectedAirlines.includes(carrierCode)
+     ? selectedAirlines.filter((code) => code !== carrierCode)
+     : [...selectedAirlines, carrierCode];
+     setSelectedAirlines(updatedSelectedAirlines);
+     setChangeAirline(updatedSelectedAirlines);
+     dispatch(setSelectedCarriers(selectedAirlines)); 
 
   };
 

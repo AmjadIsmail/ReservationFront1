@@ -18,8 +18,8 @@ export const submitFlightData = createAsyncThunk(
         return response.data; 
       } catch (error) {
         
-        alert(error);
-        alert(error.error);
+     //   alert(error);
+      //  alert(error.error);
         return rejectWithValue(error?.data || 'Server Error');
       }
     }

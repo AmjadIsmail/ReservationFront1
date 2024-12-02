@@ -344,7 +344,7 @@ const FlightResultsSr = () => {
                           <Col md={4}>
                           <div className="logo-sec">   
                           <Image src={`/images/airline-logo/${item?.itineraries[0]?.segments[0]?.marketingCarrierCode}.png`} alt={item?.itineraries[0]?.segments[0]?.marketingCarrierName} width={340} height={240} className="img-fluid"/>  
-                          <span className="title">{item?.itineraries[0]?.segments[0]?.marketingCarrierName}</span>
+                          <span hidden={true} className="title">{item?.itineraries[0]?.segments[0]?.marketingCarrierName}</span>
                         </div>
                           </Col>
                           <Col md={8}>
@@ -389,7 +389,7 @@ const FlightResultsSr = () => {
                           <div className="logo-sec">
                                 {/* <Image src={img4} className="img-fluid" alt="" /> */}
                                 <Image src={`/images/airline-logo/${item?.itineraries[1]?.segments[0]?.marketingCarrierCode}.png`} alt={item?.itineraries[1]?.segments[0]?.marketingCarrierName} width={340} height={240} className="img-fluid" />  
-                                <span className="title">{item?.itineraries[1]?.segments[0]?.marketingCarrierName}</span>
+                                <span hidden={true} className="title">{item?.itineraries[1]?.segments[0]?.marketingCarrierName}</span>
                           </div>
                           </Col>
                           <Col md={8}>
