@@ -61,6 +61,9 @@ export const submitFlightData = createAsyncThunk(
       marketingCarriers : null,
       filteredFlights: null, 
       selectedCarriers: null, 
+      selectedSegments: null,
+      selectedTime : null,
+      selectedTimeArrival : null
     },
     reducers : {
         setFlights:(state,action)=> 
@@ -72,16 +75,115 @@ export const submitFlightData = createAsyncThunk(
               state.selectedFlight = { ...state.selectedFlight, ...action.payload };              
            },
         setSelectedCarriers(state, action) {
-          debugger;
-            state.selectedCarriers = action.payload;     
-            state.filteredFlights = state.response.data.filter((flight) =>
-              flight.itineraries.some((itinerary) =>
-                itinerary.segments.some((segment) =>
-                  state.selectedCarriers.includes(segment.marketingCarrierCode)
+          
+            state.selectedCarriers = action.payload;  
+            if(action.payload != null && action.payload.length > 0){
+              state.filteredFlights = state.response.data.filter((flight) =>
+                flight.itineraries.some((itinerary) =>
+                  itinerary.segments.some((segment) =>
+                    state.selectedCarriers.includes(segment.marketingCarrierCode)
+                  )
                 )
-              )
-            );
+              );
+            }else{
+              state.filteredFlights = state.response.data;
+            }           
     },
+    setSelectedSegments(state, action) {
+      
+        state.selectedSegments = action.payload;  
+        if(action.payload != null && action.payload.length > 0){       
+          state.filteredFlights = state.response.data.filter((flight) =>
+            flight.itineraries.some((itinerary) => {
+              const segmentCount = itinerary.segments.length;
+              const matchesStops = state.selectedSegments.length === 0 || state.selectedSegments.includes(segmentCount);          
+              return matchesStops;
+            })
+          );
+        }else{
+          state.filteredFlights = state.response.data;
+        }           
+},
+setSelectedDepartureTime(state, action) {   
+  state.selectedTime = action.payload;  
+  if(action.payload != null && action.payload.length > 0){   
+    let selectedTime = action.payload
+    const TIME_RANGES_SELECTED = {
+      morning: { start: "06:00", end: "12:00" },
+      noon: { start: "12:00", end: "18:00" },
+      evening: { start: "18:00", end: "23:59" }, // Evening until end of the day
+    };
+
+    if (!selectedTime.includes("morning")) {
+      delete TIME_RANGES_SELECTED.morning;
+    } 
+    if (!selectedTime.includes("noon")) {
+      delete TIME_RANGES_SELECTED.noon;
+    }  
+    if (!selectedTime.includes("evening")) {
+      delete TIME_RANGES_SELECTED.evening;
+    }   
+    var testFlight= [];
+    state.filteredFlights = state.response.data.filter((flight) =>
+      flight.itineraries.some((itinerary) =>
+        itinerary.segments.some((segment) => {         
+          const departureTime = segment.departure.at.split("T")[1].substring(0, 5);          
+          return selectedTime.some((range) => {
+            const { start, end } = TIME_RANGES[range];
+            var departurevalid = isTimeInRange(departureTime, start, end);
+            if(departurevalid ){             
+              const plainFlight = JSON.parse(JSON.stringify(flight)); 
+              testFlight.push(plainFlight)}
+            return isTimeInRange(departureTime, start, end);
+          });
+        })      
+    ))
+    if(testFlight.length> 0){state.filteredFlights = testFlight }
+   
+  }else{
+    state.filteredFlights = state.response.data;
+  }           
+},
+setSelectedArrivalTime(state, action) {   
+  state.selectedTimeArrival = action.payload;  
+  if(action.payload != null && action.payload.length > 0){   
+    let selectedTime = action.payload
+    const TIME_RANGES_SELECTED = {
+      morning: { start: "06:00", end: "12:00" },
+      noon: { start: "12:00", end: "18:00" },
+      evening: { start: "18:00", end: "23:59" }, // Evening until end of the day
+    };
+
+    if (!selectedTime.includes("morning")) {
+      delete TIME_RANGES_SELECTED.morning;
+    } 
+    if (!selectedTime.includes("noon")) {
+      delete TIME_RANGES_SELECTED.noon;
+    }  
+    if (!selectedTime.includes("evening")) {
+      delete TIME_RANGES_SELECTED.evening;
+    }   
+    var testFlight= [];
+    state.filteredFlights = state.response.data.filter((flight) =>
+      flight.itineraries.some((itinerary) =>
+        itinerary.segments.some((segment) => {         
+          const arrivalTime = segment.arrival.at.split("T")[1].substring(0, 5);          
+          return selectedTime.some((range) => {
+            const { start, end } = TIME_RANGES[range];
+            var isvalid = isTimeInRange(arrivalTime, start, end);
+            if(isvalid ){             
+              const plainFlight = JSON.parse(JSON.stringify(flight)); 
+              testFlight.push(plainFlight)}
+            return isTimeInRange(arrivalTime, start, end);
+          });
+        })      
+    ))
+    if(testFlight.length> 0){state.filteredFlights = testFlight }
+   
+  }else{
+    state.filteredFlights = state.response.data;
+  }           
+},
       },
       extraReducers: (builder) => {
         builder
@@ -111,7 +213,26 @@ export const submitFlightData = createAsyncThunk(
       },
     });
 
+    const TIME_RANGES = {
+      morning: { start: "06:00", end: "12:00" },
+      noon: { start: "12:00", end: "18:00" },
+      evening: { start: "18:00", end: "23:59" }, // Evening until end of the day
+    };
 
+    const isTimeInRange = (time, start, end) => {
+     // debugger;
+      const parseTimeToMinutes = (t) => {
+        const [hours, minutes] = t.split(":").map(Number);
+        return hours * 60 + minutes;
+      };
+    
+      const timeMinutes = parseTimeToMinutes(time);
+      const startMinutes = parseTimeToMinutes(start);
+      const endMinutes = parseTimeToMinutes(end);  
+      var res =    timeMinutes >= startMinutes && timeMinutes <= endMinutes;
+      return timeMinutes >= startMinutes && timeMinutes <= endMinutes;
+    };
+  
     const getMarketingCarrierInfo = (data) => {
       const marketingCarriers = [];
     try{
@@ -141,5 +262,5 @@ export const submitFlightData = createAsyncThunk(
     }
     return marketingCarriers;
     }
- export const {setFlights,setSelectedFlights,setSelectedCarriers} = Slice.actions;
+ export const {setFlights,setSelectedFlights,setSelectedCarriers,setSelectedSegments,setSelectedDepartureTime,setSelectedArrivalTime} = Slice.actions;
  export default Slice.reducer;

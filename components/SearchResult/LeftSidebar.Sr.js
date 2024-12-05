@@ -8,11 +8,11 @@ import React, { useEffect, useState } from 'react';
 import ReactSlider from "react-slider";
 import { Button, Input, Label } from "reactstrap";
 import {useDispatch, useSelector} from 'react-redux';
-import { setSelectedCarriers , setSelectedFlights } from "@/store/AvailabilitySlice";
+import { setSelectedCarriers , setSelectedFlights,setSelectedSegments,setSelectedDepartureTime,setSelectedArrivalTime } from "@/store/AvailabilitySlice";
 
 
 const LeftSidebarSr = () =>  {
-  debugger;
+ // debugger;
   const dispatch = useDispatch();
   const [range, setRange] = useState([0, 100]);
   const flightResults = useSelector((state) => state?.flights?.response?.data);
@@ -26,39 +26,89 @@ const LeftSidebarSr = () =>  {
   const [openArrTime, setOpenArrTime] = useState(false);
   const [selectedAirlines, setSelectedAirlines] = useState([]);
   const [filteredFlights, setFilteredFlights] = useState([]);
-  const [changeAirline,setChangeAirline] = useState(null);
+  const [selectedStops, setSelectedStops] = useState([]);
+  const [selectedTimeRanges, setSelectedTimeRanges] = useState([]);
+  const [selectedTimeRangesArrival, setSelectedTimeRangesArrival] = useState([]);
+  useEffect(() => {
+   // debugger;
+    if(selectedAirlines != null){
+      const filtered = flightResults?.filter((flight) =>
+        flight.itineraries.some((itinerary) =>
+          itinerary.segments.some((segment) =>
+            selectedAirlines.includes(segment.marketingCarrierCode)
+          )
+        )
+     );
+      setFilteredFlights(filtered);
+    }  
+  }, [selectedAirlines, flightResults]);
 
-  // useEffect(() => {
-  //   debugger;
-  //   if(selectedAirlines.length > 0 ){         
-  //     console.log('changeAirline is not empty');
-  //     setChangeAirline(null);
-  //   }
-  //   // const filtered = flightResults?.filter((flight) =>
-  //   //   flight.itineraries.some((itinerary) =>
-  //   //     itinerary.segments.some((segment) =>
-  //   //      setSelectedAirlines.includes(segment.marketingCarrierCode)
-  //   //     )
-  //   //   )
-  //  // );
-  //   setFilteredFlights(filtered);
-  // }, [selectedAirlines, flightResults]);
+  const isTimeInRange = (time, start, end) => {
+    const timeObj = new Date(`1970-01-01T${time}:00Z`);
+    const startObj = new Date(`1970-01-01T${start}:00Z`);
+    const endObj = new Date(`1970-01-01T${end}:00Z`);
+    return timeObj >= startObj && timeObj < endObj;
+  };
 
+  const handleTimeRangeChange = (range,isChecked) => {   
+   // debugger; 
+  
+    if (isChecked) {
+       const updatedSelectedRanges = selectedTimeRanges.includes(range)
+    ? selectedTimeRanges.filter((r) => r !== range)
+    : [...selectedTimeRanges, range];
+      setSelectedTimeRanges([...selectedTimeRanges, range]);
+      dispatch(setSelectedDepartureTime(updatedSelectedRanges));
+    } else { 
+      const updatedSelectedRanges = selectedTimeRanges.filter((r) => r !== range);
+      setSelectedTimeRanges(updatedSelectedRanges);
+      dispatch(setSelectedDepartureTime(updatedSelectedRanges));
+    }
+    
+  };
+
+  const handleTimeRangeChangeArrival = (range,isChecked) => {   
+    debugger; 
+  
+    if (isChecked) {
+       const updatedSelectedRangesArrival = selectedTimeRangesArrival.includes(range)
+    ? selectedTimeRangesArrival.filter((r) => r !== range)
+    : [...selectedTimeRangesArrival, range];
+      setSelectedTimeRangesArrival([...selectedTimeRangesArrival, range]);
+      dispatch(setSelectedArrivalTime(updatedSelectedRangesArrival));
+    } else { 
+      const updatedSelectedRangesArrival = selectedTimeRangesArrival.filter((r) => r !== range);
+      setSelectedTimeRangesArrival(updatedSelectedRangesArrival);
+      dispatch(setSelectedArrivalTime(updatedSelectedRangesArrival));
+    }
+    
+  };
+
+//setSelectedArrivalTime
   const handleCheckboxChange = (carrierCode) => {
-    debugger;
-    // setSelectedCarriers((prevSelected) =>
-    //   prevSelected.includes(carrierCode)
-    //     ? prevSelected.filter((code) => code !== carrierCode)
-    //     : [...prevSelected, carrierCode]
-    // );
-     // Dispatch action to update selected carriers
-     const updatedSelectedAirlines = selectedAirlines.includes(carrierCode)
+    debugger;  
+     const updatedSelectedAirlines = selectedAirlines?.includes(carrierCode)
      ? selectedAirlines.filter((code) => code !== carrierCode)
      : [...selectedAirlines, carrierCode];
-     setSelectedAirlines(updatedSelectedAirlines);
-     setChangeAirline(updatedSelectedAirlines);
-     dispatch(setSelectedCarriers(selectedAirlines)); 
+     setSelectedAirlines(updatedSelectedAirlines);    
+     dispatch(setSelectedCarriers(updatedSelectedAirlines)); 
 
+  };
+
+  const handleStopFilterChange = (stopCount) => {
+    debugger;
+    const updatedSelectedStops = selectedStops?.includes(stopCount)
+    ? selectedStops.filter((stop) => stop !== stopCount)
+    : [...selectedStops, stopCount];
+
+  setSelectedStops(updatedSelectedStops);
+    dispatch(setSelectedSegments(updatedSelectedStops));
+  };
+
+  const TIME_RANGES = {
+    morning: { start: "06:00", end: "12:00" },
+    noon: { start: "12:00", end: "18:00" },
+    evening: { start: "18:00", end: "23:59" }, // Evening until end of the day
   };
 
   const toggleCollapse = (e) => {
@@ -106,12 +156,7 @@ const LeftSidebarSr = () =>  {
           onClick={toggleCollapse}
           className="section-title collapse-block-title d-flex justify-content-between shadow-none p-0 border-0 rounded-0"
         >
-          <h5>latest filter</h5>
-          {/* <Image
-          src="../assets/images/icon/adjust.png"
-          className="img-fluid 
-          alt=""
-        /> */}
+          <h5>latest filter</h5>         
           <FontAwesomeIcon icon={faAlignCenter} />
         </Button>
         <div
@@ -147,6 +192,8 @@ const LeftSidebarSr = () =>  {
                       type="checkbox"
                       className="form-check-input"
                       id="free-d"
+                      onChange={() => handleStopFilterChange(1)}
+                      checked={selectedStops?.includes(1)}
                     />
                     <Label className="form-check-label" for="free-d">
                       non stop
@@ -157,6 +204,8 @@ const LeftSidebarSr = () =>  {
                       type="checkbox"
                       className="form-check-input"
                       id="time"
+                      onChange={() => handleStopFilterChange(2)}
+                      checked={selectedStops?.includes(2)}
                     />
                     <Label className="form-check-label" for="time">
                       1 stop
@@ -167,6 +216,8 @@ const LeftSidebarSr = () =>  {
                       type="checkbox"
                       className="form-check-input"
                       id="zara"
+                      onChange={() => handleStopFilterChange(3)}
+                      checked={selectedStops?.includes(3)}
                     />
                     <Label className="form-check-label" for="zara">
                       2 stop
@@ -197,8 +248,7 @@ const LeftSidebarSr = () =>  {
               >
                 <div className="wrapper">
                   <div className="range-slider">
-                    {/* <Input type="text" className="js-range-slider" value="" /> */}
-
+                   
                     <ReactSlider
                       id="range-slider"
                       className="horizontal-slider"
@@ -293,11 +343,13 @@ const LeftSidebarSr = () =>  {
                 }}
               >
                 <div className="collection-brand-filter">
-                  <div className="form-check collection-filter-checkbox">
+                 <div className="form-check collection-filter-checkbox">
                     <Input
                       type="checkbox"
                       className="form-check-input"
                       id="suomi"
+                      onChange={(event) => handleTimeRangeChange("morning", event.target.checked)}
+                      checked={selectedTimeRanges.includes("morning")}
                     />
                     <Label className="form-check-label" for="suomi">
                       <Image src={sunrise} className="img-fluid me-1" alt="" />{" "}
@@ -309,6 +361,9 @@ const LeftSidebarSr = () =>  {
                       type="checkbox"
                       className="form-check-input"
                       id="english"
+                      onChange={(event) => handleTimeRangeChange("noon", event.target.checked)}
+                      checked={selectedTimeRanges.includes("noon")}
+                    
                     />
                     <Label className="form-check-label" for="english">
                       <Image src={sun} className="img-fluid me-1" alt="" /> noon
@@ -320,6 +375,8 @@ const LeftSidebarSr = () =>  {
                       type="checkbox"
                       className="form-check-input"
                       id="sign"
+                      onChange={(event) => handleTimeRangeChange("evening", event.target.checked)}
+                      checked={selectedTimeRanges.includes("evening")}
                     />
                     <Label className="form-check-label" for="sign">
                       <Image src={night} className="img-fluid me-1" alt="" />{" "}
@@ -357,6 +414,8 @@ const LeftSidebarSr = () =>  {
                       type="checkbox"
                       className="form-check-input"
                       id="morning"
+                      onChange={(event) => handleTimeRangeChangeArrival("morning", event.target.checked)}
+                      checked={selectedTimeRangesArrival.includes("morning")}
                     />
                     <Label className="form-check-label" for="morning">
                       <Image src={sunrise} className="img-fluid me-1" alt="" />{" "}
@@ -368,6 +427,8 @@ const LeftSidebarSr = () =>  {
                       type="checkbox"
                       className="form-check-input"
                       id="noon"
+                      onChange={(event) => handleTimeRangeChangeArrival("noon", event.target.checked)}
+                      checked={selectedTimeRangesArrival.includes("noon")}
                     />
                     <Label className="form-check-label" for="noon">
                       <Image src={sun} className="img-fluid me-1" alt="" /> noon
@@ -379,6 +440,8 @@ const LeftSidebarSr = () =>  {
                       type="checkbox"
                       className="form-check-input"
                       id="evening"
+                      onChange={(event) => handleTimeRangeChangeArrival("evening", event.target.checked)}
+                      checked={selectedTimeRangesArrival.includes("evening")}
                     />
                     <Label className="form-check-label" for="evening">
                       <Image src={night} className="img-fluid me-1" alt="" />

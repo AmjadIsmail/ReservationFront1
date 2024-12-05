@@ -27,7 +27,7 @@ import { useRouter } from "next/router";
   const [endDate, setEndDate] = useState(new Date());
   const [showPassengers, setShowPassengers] = useState(false);  
   const [destAirport, setDestAirport] = useState(null);
-  const [originAirport, setOriginAirport] = useState(null);
+  const [originAirport, setOriginAirport] = useState('London , [LON], UnitedKingdom');
   const [fromDate , setFromDate] = useState(null);
   const [toDate , setToDate] = useState(null);
   const [adults , setAdults] = useState(1);
@@ -43,6 +43,7 @@ import { useRouter } from "next/router";
   console.log(flights);
   
   const updateshowpassengerfromChild = (newValue) => {
+   // debugger;
     setShowPassengers(newValue); 
   };
   
@@ -95,15 +96,16 @@ import { useRouter } from "next/router";
     setOriginAirport(airport);
   };  
   const handleFocus = () => {  
+  
      setShowPassengers(true);   
   };
-  const handleClick = () => {     
-    setShowPassengers(true);   
+  const handleClick = () => {   
+    setShowPassengers((prevState) => !prevState);
+   // setShowPassengers(true); 
+      
   };
  
-  const handleBlur = (reason) => {     
-    setShowPassengers((prevShow) => !prevShow); 
-  };
+ 
   function extractAirportCode(destination) {
     const match = destination.match(/\[([A-Z]{3})\]/); 
     return match ? match[1] : null; 
@@ -146,6 +148,7 @@ import { useRouter } from "next/router";
   };
  function verifydata(){  
    
+   setShowPassengers(false);
     const isValid = (isToday(startDate) || isToday(endDate));
     if(isValid) {
     setApiResponse('Please provide valid from date and to date');
@@ -335,10 +338,11 @@ try {
             {props.showLabel && <Label>from</Label>}          
             <AutoComplete2
               items={fromItems}
-              placeholder="Form"
+              placeholder="Form"              
               className="position-relative z-2"
               icon={faCrosshairs}     
-              onAirportSelect={handleOriginAirportChange}       
+              onAirportSelect={handleOriginAirportChange} 
+              defaultText={'London , [LON], UnitedKingdom'}      
             /> 
              </Col>
           <Col lg={props.col1 || "12"} md={props.col1 || "12"}>
@@ -349,6 +353,7 @@ try {
               className="position-relative z-1"
               icon={faLocationDot}  
               onAirportSelect={handleDestAirportChange}
+              defaultText={''}
             />
           </Col>
           <Col lg={props.col2 || "4"} md={props.col2 || "4"}>
@@ -391,7 +396,7 @@ try {
                   placeholder="Passengers"
                   className="rounded-0 " 
                   onFocus={() => handleFocus()}     
-                  onClick={() => handleClick()}           
+                  onClick={() => handleClick()}                     
                 />
                 <div className="icon" >
                   <FontAwesomeIcon icon={faUser} />

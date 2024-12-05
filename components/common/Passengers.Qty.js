@@ -70,9 +70,7 @@ const PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassVal
       setValueInfants(newValue);   
     }
   };
-  const toggleShow = () => {
-  
-  };
+ 
   React.useEffect(() => {
     updateParent();
   }, [valueAdult, valueChildren, valueInfants ]);
@@ -80,7 +78,7 @@ const PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassVal
 
   return (
     <>  
-        <div className="showPassengers" onFocus={onFocus}>
+        <div className="showPassengers" onFocus={onFocus}  onBlur={() => handleshowparent()} >
         <div className="rowSt">
           <Label>adult</Label>
 
@@ -180,7 +178,7 @@ const PassengersQty = ({  adultsValue,childsValue,infantsValue, selectedClassVal
           </Label>
         </div>
 
-        <div className="bottomPart">
+        <div className="bottomPart" hidden={true}>
           <Button onClick={() => handleshowparent()} color="transparent" className="btn">
             apply
           </Button>

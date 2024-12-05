@@ -196,7 +196,7 @@ const FlightResultsSr = () => {
   const flightRequest = useSelector((state) => state?.flights?.flights);
   const flightError = useSelector((state) => state?.flights?.error);
   const filteredFlights  = useSelector((state) => state?.flights?.filteredFlights);
-  debugger;
+  
 
   function convertToDateFormat(dateString) {
     if(dateString != null){
